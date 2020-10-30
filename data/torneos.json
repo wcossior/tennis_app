@@ -1,0 +1,388 @@
+{
+  "torneos": [
+    {
+      "numero": 1,
+      "tipo": "Robin",
+      "nombre": "Torneo varones nro 1",
+      "ranking": [],
+      "edad": 18,
+      "jugadores": [
+        {
+          "numero": 1,
+          "nombre": "Juan Perez",
+          "categoria": "absoluto-varones",
+          "grupo": "A"
+        },
+        {
+          "numero": 2,
+          "nombre": "Pablo Marmol",
+          "categoria": "absoluto-varones",
+          "grupo": "A"
+        },
+        {
+          "numero": 3,
+          "nombre": "Pedro Picapiedra",
+          "categoria": "absoluto-varones",
+          "grupo": "A"
+        },
+        {
+          "numero": 4,
+          "nombre": "Homero Simpson",
+          "categoria": "absoluto-varones",
+          "grupo": "A"
+        },
+        {
+          "numero": 5,
+          "nombre": "Bart Simpson",
+          "categoria": "absoluto-varones",
+          "grupo": "B"
+        },
+        {
+          "numero": 6,
+          "nombre": "Barney Gumble",
+          "categoria": "absoluto-varones",
+          "grupo": "B"
+        },
+        {
+          "numero": 7,
+          "nombre": "Jou Walachi",
+          "categoria": "absoluto-varones",
+          "grupo": "B"
+        },
+        {
+          "numero": 8,
+          "nombre": "Benedit Arnold",
+          "categoria": "absoluto-varones",
+          "grupo": "B"
+        },
+        {
+          "numero": 9,
+          "nombre": "Montgomery Burns",
+          "categoria": "absoluto-varones",
+          "grupo": "C"
+        },
+        {
+          "numero": 10,
+          "nombre": "Mou Szyslak",
+          "categoria": "absoluto-varones",
+          "grupo": "C"
+        },
+        {
+          "numero": 11,
+          "nombre": "Nelson Muntz",
+          "categoria": "absoluto-varones",
+          "grupo": "C"
+        },
+        {
+          "numero": 12,
+          "nombre": "Milhouse Van Houten",
+          "categoria": "absoluto-varones",
+          "grupo": "C"
+        },
+        {
+          "numero": 13,
+          "nombre": "Ned Flanders",
+          "categoria": "absoluto-varones",
+          "grupo": "D"
+        },
+        {
+          "numero": 14,
+          "nombre": "Lenny Leonard",
+          "categoria": "absoluto-varones",
+          "grupo": "D"
+        },
+        {
+          "numero": 15,
+          "nombre": "Waylon Smithers",
+          "categoria": "absoluto-varones",
+          "grupo": "D"
+        },
+        {
+          "numero": 16,
+          "nombre": "Bob Patiño",
+          "categoria": "absoluto-varones",
+          "grupo": "D"
+        }
+      ],
+      "club": "Country Club",
+      "fecha_ini": "20/9/2020",
+      "fecha_fin": "26/9/2020",
+      "estado": "Terminado",
+      "programacion_fase_grupos": [
+        {
+          "nombre": "Jornada 1 fase de grupos A",
+          "jugador1": "Juan Perez",
+          "jugador2": "Bob Patiño",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos A",
+          "jugador1": "Waylon Smithers",
+          "jugador2": "Pablo Marmol",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos B",
+          "jugador1": "Lenny Leonard",
+          "jugador2": "Pedro Picapiedra",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos B",
+          "jugador1": "Ned Flanders",
+          "jugador2": "Homero Simpson",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos C",
+          "jugador1": "Bart Simpson",
+          "jugador2": "Milhouse Van Houten",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos C",
+          "jugador1": "Nelson Muntz",
+          "jugador2": "Barney Gumble",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos D",
+          "jugador1": "Mou Szyslak",
+          "jugador2": "Jou Walachi",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 fase de grupos D",
+          "jugador1": "Montgomery Burns",
+          "jugador2": "Benedit Arnold",
+          "fecha": "20/9/2020"
+        }
+      ],
+      "programacion_fase_eliminatoria": [
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Mou Szyslak",
+          "jugador2": "Jou Walachi",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Montgomery Burns",
+          "jugador2": "Benedit Arnold",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Lenny Leonard",
+          "jugador2": "Pedro Picapiedra",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Ned Flanders",
+          "jugador2": "Homero Simpson",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Juan Perez",
+          "jugador2": "Bob Patiño",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Waylon Smithers",
+          "jugador2": "Pablo Marmol",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Bart Simpson",
+          "jugador2": "Milhouse Van Houten",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Nelson Muntz",
+          "jugador2": "Barney Gumble",
+          "fecha": "20/9/2020"
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "tipo": "Avance",
+      "nombre": "Torneo varones nro 2",
+      "ranking": [],
+      "edad": 18,
+      "jugadores": [
+        {
+          "numero": 1,
+          "nombre": "Juan Perez",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 2,
+          "nombre": "Pablo Marmol",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 3,
+          "nombre": "Pedro Picapiedra",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 4,
+          "nombre": "Homero Simpson",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 5,
+          "nombre": "Bart Simpson",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 6,
+          "nombre": "Barney Gumble",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 7,
+          "nombre": "Jou Walachi",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 8,
+          "nombre": "Benedit Arnold",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 9,
+          "nombre": "Montgomery Burns",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 10,
+          "nombre": "Mou Szyslak",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 11,
+          "nombre": "Nelson Muntz",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 12,
+          "nombre": "Milhouse Van Houten",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 13,
+          "nombre": "Ned Flanders",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 14,
+          "nombre": "Lenny Leonard",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 15,
+          "nombre": "Waylon Smithers",
+          "categoria": "absoluto-varones",
+          "grupo": "Octavos de final",
+          "cuadro": "Octavos de final"
+        },
+        {
+          "numero": 16,
+          "nombre": "Bob Patiño",
+          "categoria": "absoluto-varones",
+          "grupo": "",
+          "cuadro": "Octavos de final"
+        }
+      ],
+      "programacion_fase_eliminatoria": [
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Lenny Leonard",
+          "jugador2": "Pedro Picapiedra",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Ned Flanders",
+          "jugador2": "Homero Simpson",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Juan Perez",
+          "jugador2": "Bob Patiño",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Waylon Smithers",
+          "jugador2": "Pablo Marmol",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Bart Simpson",
+          "jugador2": "Milhouse Van Houten",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Nelson Muntz",
+          "jugador2": "Barney Gumble",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Mou Szyslak",
+          "jugador2": "Jou Walachi",
+          "fecha": "20/9/2020"
+        },
+        {
+          "nombre": "Jornada 1 Octavos de final",
+          "jugador1": "Montgomery Burns",
+          "jugador2": "Benedit Arnold",
+          "fecha": "20/9/2020"
+        }
+      ],
+      "club": "Country Club",
+      "fecha_ini": "10/11/2020",
+      "fecha_fin": "16/11/2020",
+      "estado": "Activo"
+    }
+  ]
+}
