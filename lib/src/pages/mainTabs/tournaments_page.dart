@@ -16,13 +16,16 @@ class TournamentsPage extends StatelessWidget {
 
   Widget _tournamentList() {
     return FutureBuilder(
-        future: tournamentProvider.uploadData(),
-        initialData: [], //opcional
+        future: tournamentProvider.getAllTournaments(),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-          return ListView(
-            padding: EdgeInsets.all(10.0),
-            children: _getTournaments(snapshot.data, context),
-          );
+          if (snapshot.hasData) {
+            return ListView(
+              padding: EdgeInsets.all(10.0),
+              children: _getTournaments(snapshot.data, context),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
         });
   }
 
@@ -37,9 +40,10 @@ class TournamentsPage extends StatelessWidget {
           child: Column(
             children: [
               _drawTitle(context, tournam),
-              _drawButtons(context, tournam),
+              _drawInformationCard(tournam),
               Divider(),
-              _drawInformationCard(tournam)
+              _drawButtons(context, tournam),
+              SizedBox(height: 8.0)
             ],
           ));
       tournaments.add(widgetTemp);
@@ -51,7 +55,7 @@ class TournamentsPage extends StatelessWidget {
     return ListTile(
         title: Center(
             child: Text(
-      tournam["nombre"],
+      tournam.nombre,
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
     )));
   }
@@ -60,17 +64,14 @@ class TournamentsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _isRobin(tournam, context),
-        SizedBox(width: 12.0),
         ButtonTheme(
             minWidth: double.minPositive,
-            child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                color: Color.fromRGBO(255, 169, 0, 1.0),
-                child: playOffIcon,
+            child: FlatButton(
+                child: Text("VER CATEGORÍAS",
+                    style: TextStyle(color: Color.fromRGBO(11, 164, 93, 1.0))),
                 onPressed: () {
-                  Navigator.pushNamed(context, "details_playoff", arguments: tournam);                  
+                  Navigator.pushNamed(context, "categories",
+                      arguments: tournam);
                 }))
       ],
     );
@@ -82,12 +83,10 @@ class TournamentsPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Icon(Icons.grid_view, color: Colors.black26),
-          Text("Categoria \n Absoluto"),
           Icon(Icons.date_range, color: Colors.black26),
-          Text("Fecha inicio\n" + tournam["fecha_ini"]),
+          Text("Fecha inicio\n" + tournam.fechaInicio),
           Icon(Icons.date_range, color: Colors.black26),
-          Text("Fecha fin\n" + tournam["fecha_fin"])
+          Text("Fecha fin\n" + tournam.fechaFin)
         ],
       ),
     );
@@ -97,7 +96,7 @@ class TournamentsPage extends StatelessWidget {
     if (tournam["tipo"] == "Robin") {
       return ButtonTheme(
           minWidth: double.minPositive,
-          child: RaisedButton(
+          child: FlatButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
               color: Color.fromRGBO(255, 169, 0, 1.0),
@@ -106,7 +105,8 @@ class TournamentsPage extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pushNamed(context, "details_group", arguments: tournam);
+                Navigator.pushNamed(context, "details_group",
+                    arguments: tournam);
               }));
     } else {
       return Container();

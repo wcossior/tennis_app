@@ -1,21 +1,25 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
+import 'package:tennis_app/src/models/tournament_model.dart';
 
 class _TournamentProvider {
   List<dynamic> tournaments = [];
+  String _url = "tenis-country-club.herokuapp.com";
 
-  _TournamentProvider() {
-    uploadData();
+  Future<List<Tournament>> _processResp(Uri url) async {
+    final resp = await http.get(url);
+    final decodeData = json.decode(resp.body);
+    final tournaments = new Tournaments.fromJsonList(decodeData);
+
+    return tournaments.items;
   }
 
-  Future<List<dynamic>> uploadData() async {
-    final resp = await rootBundle.loadString("data/torneos.json");
+  Future<List<dynamic>> getAllTournaments() async {
 
-    Map dataMap = json.decode(resp);
-    tournaments = dataMap["torneos"];
+    final url = Uri.https(_url, "/torneos.json");
 
-    return tournaments;
+    return await _processResp(url);
   }
 }
 

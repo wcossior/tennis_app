@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tennis_app/src/pages/myTournaments_page.dart';
-import 'package:tennis_app/src/pages/notifications_page.dart';
-import 'package:tennis_app/src/pages/tournaments_page.dart';
+import 'package:tennis_app/src/pages/mainTabs/myTournaments_page.dart';
+import 'package:tennis_app/src/pages/mainTabs/notifications_page.dart';
+import 'package:tennis_app/src/pages/mainTabs/tournaments_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
