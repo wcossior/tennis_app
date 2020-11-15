@@ -5,7 +5,7 @@ import 'package:tennis_app/src/models/category_model.dart';
 
 class _CategoryProvider {
   List<dynamic> categories = [];
-  String _url = "tenis-country-club.herokuapp.com";
+  String _url = "tennisapi.herokuapp.com";
 
   Future<List<Category>> _processResp(Uri url) async {
     final resp = await http.get(url);
@@ -15,9 +15,9 @@ class _CategoryProvider {
     return categories.items;
   }
 
-  Future<List<dynamic>> getCategoriesfromThisTournament(int id) async {
+  Future<List<dynamic>> getCategoriesfromThisTournament(String id) async {
 
-    final url = Uri.https(_url, "/torneos/$id/categoria.json");
+    final url = Uri.https(_url, "/categorias/$id");
 
     return await _processResp(url);
   }

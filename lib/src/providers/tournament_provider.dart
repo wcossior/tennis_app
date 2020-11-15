@@ -5,7 +5,7 @@ import 'package:tennis_app/src/models/tournament_model.dart';
 
 class _TournamentProvider {
   List<dynamic> tournaments = [];
-  String _url = "tenis-country-club.herokuapp.com";
+  String _url = "tennisapi.herokuapp.com";
 
   Future<List<Tournament>> _processResp(Uri url) async {
     final resp = await http.get(url);
@@ -17,7 +17,7 @@ class _TournamentProvider {
 
   Future<List<dynamic>> getAllTournaments() async {
 
-    final url = Uri.https(_url, "/torneos.json");
+    final url = Uri.https(_url, "/torneos");
 
     return await _processResp(url);
   }

@@ -11,16 +11,15 @@ class Categories {
 }
 
 class Category {
-  int id;
+  String id;
   String nombre;
   int numeroJugadores;
   int numeroGrupos;
   int numeroJugadoresGrupo;
   String tipo;
-  int torneoId;
+  String torneoId;
   String createdAt;
   String updatedAt;
-  String url;
 
   Category({
     this.id,
@@ -31,8 +30,7 @@ class Category {
     this.tipo,
     this.torneoId,
     this.createdAt,
-    this.updatedAt,
-    this.url,
+    this.updatedAt
   });
 
   Category.fromJsonMap(Map<String, dynamic> json) {
@@ -45,6 +43,5 @@ class Category {
     torneoId = json["torneo_id"];
     createdAt = json["created_at"];
     updatedAt = json["updated_at"];
-    url = json["url"];
   }
 }

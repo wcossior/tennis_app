@@ -11,13 +11,13 @@ class Tournaments {
 }
 
 class Tournament {
-  int id;
+  String id;
   String nombre;
   String fechaInicio;
   String fechaFin;
   String createdAt;
   String updatedAt;
-  String url;
+  int numeroCanchas;
 
   Tournament({
     this.id,
@@ -26,7 +26,7 @@ class Tournament {
     this.fechaFin,
     this.createdAt,
     this.updatedAt,
-    this.url,
+    this.numeroCanchas,
   });
 
   Tournament.fromJsonMap(Map<String, dynamic> json) {
@@ -36,6 +36,6 @@ class Tournament {
     fechaFin = json["fecha_fin"];
     createdAt = json["created_at"];
     updatedAt = json["updated_at"];
-    url = json["url"];
+    numeroCanchas = json["numero_canchas"];
   }
 }
