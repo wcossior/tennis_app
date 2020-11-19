@@ -32,10 +32,21 @@ class Tournament {
   Tournament.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
     nombre = json["nombre"];
-    fechaInicio = json["fecha_inicio"];
-    fechaFin = json["fecha_fin"];
+    fechaInicio = formatDate(json["fecha_inicio"]);
+    fechaFin = formatDate(json["fecha_fin"]);
     createdAt = json["created_at"];
     updatedAt = json["updated_at"];
     numeroCanchas = json["numero_canchas"];
+  }
+
+  String formatDate(dateWithoutFormat) {
+    DateTime date = DateTime.parse(dateWithoutFormat);
+    String day = date.day.toString();
+    String month = date.month.toString();
+    String year = date.year.toString();
+
+    String formatedDate = "$day/$month/$year";
+
+    return formatedDate;
   }
 }
