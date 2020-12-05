@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 45 45">
+  <g id="iconoVersus" transform="translate(-23 -203)">
+    <circle id="Elipse_13" data-name="Elipse 13" cx="22.5" cy="22.5" r="22.5" transform="translate(23 203)" fill="#f9f9f9"/>
+    <g id="match" transform="translate(31 211)">
+      <path id="Trazado_94" data-name="Trazado 94" d="M330,10a2,2,0,0,0,2-2h-4A2,2,0,0,0,330,10Z" transform="translate(-307.5 -7.5)" fill="#58595b"/>
+      <path id="Trazado_95" data-name="Trazado 95" d="M257,8a2,2,0,1,1-4,0h-5v3h2v8h10V11h2V8Z" transform="translate(-232.5 -7.5)" fill="#ff9275"/>
+      <path id="Trazado_96" data-name="Trazado 96" d="M17,296a2,2,0,0,1-4,0H8v3h2v8H20v-8h2v-3Z" transform="translate(-7.5 -277.5)" fill="#aeb97f"/>
+      <path id="Trazado_97" data-name="Trazado 97" d="M90,298a2,2,0,0,0,2-2H88A2,2,0,0,0,90,298Z" transform="translate(-82.5 -277.5)" fill="#58595b"/>
+      <g id="Grupo_30" data-name="Grupo 30">
+        <path id="Trazado_98" data-name="Trazado 98" d="M254.5,0h-14a.5.5,0,0,0-.5.5v3a.5.5,0,0,0,.5.5H242v7.5a.5.5,0,0,0,.5.5h10a.5.5,0,0,0,.5-.5V4h1.5a.5.5,0,0,0,.5-.5V.5A.5.5,0,0,0,254.5,0Zm-5.592,1a1.491,1.491,0,0,1-2.816,0ZM254,3h-1.5a.5.5,0,0,0-.5.5V11h-9V3.5a.5.5,0,0,0-.5-.5H241V1h4.05a2.5,2.5,0,0,0,4.9,0H254Z" transform="translate(-225)" fill="#353535"/>
+        <path id="Trazado_99" data-name="Trazado 99" d="M384,56h2v1h-2Z" transform="translate(-360 -52.5)" fill="#353535"/>
+        <path id="Trazado_100" data-name="Trazado 100" d="M14.5,288H.5a.5.5,0,0,0-.5.5v3a.5.5,0,0,0,.5.5H2v7.5a.5.5,0,0,0,.5.5h10a.5.5,0,0,0,.5-.5V292h1.5a.5.5,0,0,0,.5-.5v-3A.5.5,0,0,0,14.5,288Zm-5.592,1a1.491,1.491,0,0,1-2.816,0ZM14,291H12.5a.5.5,0,0,0-.5.5V299H3v-7.5a.5.5,0,0,0-.5-.5H1v-2H5.05a2.5,2.5,0,0,0,4.9,0H14Z" transform="translate(0 -270)" fill="#353535"/>
+        <path id="Trazado_101" data-name="Trazado 101" d="M144,344h2v1h-2Z" transform="translate(-135 -322.5)" fill="#353535"/>
+        <path id="Trazado_102" data-name="Trazado 102" d="M240,200.5v2a.5.5,0,0,0,.5.5h2v1H240v1h3a.5.5,0,0,0,.5-.5v-2a.5.5,0,0,0-.5-.5h-2v-1h2.5v-1h-3A.5.5,0,0,0,240,200.5Z" transform="translate(-225 -187.5)" fill="#353535"/>
+        <path id="Trazado_103" data-name="Trazado 103" d="M160.223,203.916l1.5,1a.5.5,0,0,0,.555,0l1.5-1A.5.5,0,0,0,164,203.5V200h-1v3.232l-1,.668-1-.667V200h-1v3.5A.5.5,0,0,0,160.223,203.916Z" transform="translate(-150 -187.5)" fill="#353535"/>
+        <path id="Trazado_104" data-name="Trazado 104" d="M16,256h1v1H16Z" transform="translate(-15 -240)" fill="#353535"/>
+        <path id="Trazado_105" data-name="Trazado 105" d="M48,256h1v1H48Z" transform="translate(-45 -240)" fill="#353535"/>
+        <path id="Trazado_106" data-name="Trazado 106" d="M80,256h1v1H80Z" transform="translate(-75 -240)" fill="#353535"/>
+        <path id="Trazado_107" data-name="Trazado 107" d="M352,208h1v1h-1Z" transform="translate(-330 -195)" fill="#353535"/>
+        <path id="Trazado_108" data-name="Trazado 108" d="M384,208h1v1h-1Z" transform="translate(-360 -195)" fill="#353535"/>
+        <path id="Trazado_109" data-name="Trazado 109" d="M416,208h1v1h-1Z" transform="translate(-390 -195)" fill="#353535"/>
+      </g>
+    </g>
+  </g>
+</svg>

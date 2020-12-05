@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:tennis_app/src/providers/tournament_provider.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TournamentsPage extends StatelessWidget {
   final Widget playOffIcon =
       SvgPicture.asset('assets/playofficon.svg', semanticsLabel: 'Play Off');
 
+  final Widget tennisIcon = SvgPicture.asset(
+    'assets/tennis.svg',
+    semanticsLabel: 'Tennisicon',
+    height: 20.0,
+  );
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,11 +57,16 @@ class TournamentsPage extends StatelessWidget {
 
   Widget _drawTitle(BuildContext context, tournam) {
     return ListTile(
-        title: Center(
-            child: Text(
-      tournam.nombre,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-    )));
+      title: Center(
+        child: Text(
+          tournam.nombre,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
+              color: Color.fromRGBO(112, 112, 112, 1.0)),
+        ),
+      ),
+    );
   }
 
   Widget _drawButtons(BuildContext context, tournam) {
@@ -68,7 +77,7 @@ class TournamentsPage extends StatelessWidget {
             minWidth: double.minPositive,
             child: FlatButton(
                 child: Text("VER CATEGORÍAS",
-                    style: TextStyle(color: Color.fromRGBO(11, 164, 93, 1.0))),
+                    style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
                 onPressed: () {
                   Navigator.pushNamed(context, "categories",
                       arguments: tournam);
@@ -90,26 +99,5 @@ class TournamentsPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _isRobin(tournam, BuildContext context) {
-    if (tournam["tipo"] == "Robin") {
-      return ButtonTheme(
-          minWidth: double.minPositive,
-          child: FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              color: Color.fromRGBO(255, 169, 0, 1.0),
-              child: Icon(
-                FontAwesomeIcons.layerGroup,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, "details_group",
-                    arguments: tournam);
-              }));
-    } else {
-      return Container();
-    }
-  }
+  }  
 }

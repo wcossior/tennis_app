@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
@@ -21,24 +18,25 @@ class _CategoriesPageState extends State<CategoriesPage> {
     width: 40.0,
   );
 
-  List<dynamic> tournaments = [];
-
-  void uploadData() async {
-    final resp = await rootBundle.loadString("data/torneos.json");
-
-    Map dataMap = json.decode(resp);
-    tournaments = dataMap["torneos"];
-  }
+  final Widget categoryIcon = SvgPicture.asset(
+    'assets/iconoCategoria.svg',
+    semanticsLabel: 'Categoryicon',
+    height: 60.0,
+  );
 
   @override
   Widget build(BuildContext context) {
     final Tournament tournament = ModalRoute.of(context).settings.arguments;
-    uploadData();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Categorías"),
-        backgroundColor: Color.fromRGBO(11, 164, 93, 1.0),
+        title: Text(
+          "Categorías",
+          style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+        ),
+        backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
         centerTitle: true,
+        shadowColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
       body: _showCategories(tournament),
@@ -58,7 +56,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
             return Center(child: CircularProgressIndicator());
           }
         });
-    
   }
 
   List<Widget> _showInformation(category) {
@@ -134,27 +131,43 @@ class _CategoriesPageState extends State<CategoriesPage> {
     List<Widget> readedCategories = new List<Widget>();
 
     for (var item in categories) {
-      final info = Container(
-        padding: EdgeInsets.all(10.0),
-        child: ListTile(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          contentPadding: EdgeInsets.all(10.0),
-          leading: tournamenticon,
-          title: Text(item.nombre, style: TextStyle(fontSize: 20.0)),
-          trailing: Icon(Icons.keyboard_arrow_right,
-              color: Color.fromRGBO(11, 164, 93, 1.0)),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _showInformation(item),
+      final info = Container(        
+        width: double.infinity,
+        child: Card(  
+          color: Color.fromRGBO(249, 249, 249, 1.0),        
+          margin: EdgeInsets.all(0), 
+          elevation: 0,         
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: categoryIcon,
+                title: Text(item.nombre, style: TextStyle(fontSize: 20.0)),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _showInformation(item),
+                ),
+              ),
+              ButtonBar(
+                children: <Widget>[
+                  item.tipo == "roundRobin"?FlatButton(
+                    child: const Text('GRUPOS',
+                        style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "details_group",arguments: item.id);
+                    },
+                  ):Container(),
+                  FlatButton(
+                    child: const Text('ELIMINATORIA',
+                        style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "details_playoff",arguments: item.id);
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
-          onTap: () {
-            if (item.tipo == "cuadroAvance") {
-              Navigator.pushNamed(context, "details_playoff", arguments: tournaments[1]);
-            } else {
-              Navigator.pushNamed(context, "details_group", arguments: tournaments[0]);
-            }
-          },
         ),
       );
       readedCategories
@@ -163,6 +176,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
           thickness: 1.0,
         ));
     }
-    return readedCategories;
+    return readedCategories;    
   }
 }

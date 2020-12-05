@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tennis_app/src/pages/mainTabs/myTournaments_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/notifications_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/tournaments_page.dart';
@@ -15,19 +15,25 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<String> _titlesTabs = ["Torneos", "Mis torneos", "Notificaciones"];
   String _currentTitle = "Torneos";
+  final Widget trophyIcon = SvgPicture.asset(
+    'assets/trophy.svg',
+    semanticsLabel: 'Trophyicon',
+    color: Color.fromRGBO(174, 185, 127, 1.0),
+    height: 22.0,
+  );
+
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
           appBar: AppBar(
-            title: Text(_currentTitle),
+            title: Text(_currentTitle, style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),),
             elevation: 0,
-            backgroundColor: Color.fromRGBO(11, 164, 93, 1.0),
+            backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
             bottom: _tabBar(),
-            centerTitle: true,
           ),
           body: TabBarView(children: [
             TournamentsPage(),
@@ -40,14 +46,10 @@ class _HomePageState extends State<HomePage> {
   Widget _tabBar(){
     return TabBar(
               onTap: _changeTitle,
-              labelColor: Color.fromRGBO(11, 164, 93, 1.0),
+              labelColor: Color.fromRGBO(174, 185, 127, 1.0),
               indicatorSize: TabBarIndicatorSize.label,
-              unselectedLabelColor: Colors.white,
-              indicator: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0)),
-                  color: Colors.white),
+              unselectedLabelColor: Color.fromRGBO(174, 185, 127, 1.0),  
+              indicatorColor: Color.fromRGBO(174, 185, 127, 1.0),            
               tabs: _getTabs(),
             );
   }
@@ -59,16 +61,16 @@ class _HomePageState extends State<HomePage> {
           child: Align(
         alignment: Alignment.center,
         child: Stack(children: [
-          Container(child: Icon(FontAwesomeIcons.trophy)),
+          Container(child: trophyIcon),
           Container(
               padding: EdgeInsets.only(left: 16.0),
-              child: Icon(FontAwesomeIcons.trophy))
+              child: trophyIcon)
         ]),
       )),
       Tab(
           child: Align(
         alignment: Alignment.center,
-        child: Icon(FontAwesomeIcons.trophy),
+        child: trophyIcon,
       )),
       Tab(
           child: Align(

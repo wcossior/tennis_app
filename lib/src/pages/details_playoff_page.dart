@@ -14,22 +14,23 @@ class _DetailsPlayoffPageState extends State<DetailsPlayoffPage> {
 
   @override
   Widget build(BuildContext context) {
-    final tournament = ModalRoute.of(context).settings.arguments;
+    final idCategory = ModalRoute.of(context).settings.arguments;
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text(_currentTitle),
+            title: Text(_currentTitle, style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0))),
             elevation: 0,
-            backgroundColor: Color.fromRGBO(11, 164, 93, 1.0),
+            backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
             bottom: _tabBar(),
             centerTitle: true,
+            iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0))
           ),
           body: TabBarView(children: [
             PlayoffPage(),
-            GamesPage(tournament: tournament, typeInfo: "eliminatoria")
+            GamesPage(idCategory: idCategory, typeInfo: "eliminatoria")
           ])),
     );
   }
@@ -37,13 +38,10 @@ class _DetailsPlayoffPageState extends State<DetailsPlayoffPage> {
   Widget _tabBar() {
     return TabBar(
       onTap: _changeTitle,
-      labelColor: Color.fromRGBO(11, 164, 93, 1.0),
+      labelColor: Color.fromRGBO(174, 185, 127, 1.0),
       indicatorSize: TabBarIndicatorSize.label,
-      unselectedLabelColor: Colors.white,
-      indicator: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
-          color: Colors.white),
+      unselectedLabelColor: Color.fromRGBO(174, 185, 127, 1.0),
+      indicatorColor: Color.fromRGBO(174, 185, 127, 1.0),
       tabs: _getTabs(),
     );
   }

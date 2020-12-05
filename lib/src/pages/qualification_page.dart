@@ -6,6 +6,7 @@ class QualificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Color.fromRGBO(249, 249, 249, 1.0),
       child: Center(child: Text("Clasificacion pagina")),
     );
   }
