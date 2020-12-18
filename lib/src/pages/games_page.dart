@@ -14,7 +14,8 @@ class GamesPage extends StatefulWidget {
   _GamesPageState createState() => _GamesPageState();
 }
 
-class _GamesPageState extends State<GamesPage> with AutomaticKeepAliveClientMixin<GamesPage> {
+class _GamesPageState extends State<GamesPage>
+    with AutomaticKeepAliveClientMixin<GamesPage> {
   final Widget versusIcon = SvgPicture.asset(
     'assets/iconoVersus.svg',
     semanticsLabel: 'Versusicon',
@@ -27,7 +28,6 @@ class _GamesPageState extends State<GamesPage> with AutomaticKeepAliveClientMixi
   List<dynamic> dataGames = new List<dynamic>();
   List<dynamic> dataGamesForDisplay = new List<dynamic>();
 
-
   @override
   void initState() {
     fetchGames().then((data) {
@@ -39,7 +39,7 @@ class _GamesPageState extends State<GamesPage> with AutomaticKeepAliveClientMixi
     super.initState();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
@@ -61,7 +61,25 @@ class _GamesPageState extends State<GamesPage> with AutomaticKeepAliveClientMixi
     return resp;
   }
 
- 
+  searchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(hintText: 'Ingrese el nombre del jugador'),
+        onChanged: (text) {
+          text = text.toLowerCase();
+          setState(() {
+            dataGamesForDisplay = dataGames.where((game) {
+              var gamePlayer1 = game.jug1.toLowerCase();
+              var gamePlayer2 = game.jug2.toLowerCase();
+
+              return gamePlayer1.contains(text) || gamePlayer2.contains(text);
+            }).toList();
+          });
+        },
+      ),
+    );
+  }
 
   // Widget _showPlanning(String typeInfo) {
   //   return FutureBuilder(
@@ -84,38 +102,30 @@ class _GamesPageState extends State<GamesPage> with AutomaticKeepAliveClientMixi
   Widget _showPlanning(BuildContext context) {
     if (dataGames.isEmpty) return Center(child: CircularProgressIndicator());
 
-    return ListView(
-      padding: EdgeInsets.all(10.0),
-      children: _getPlannigList(context),
-    );
+    return ListView.builder(
+        padding: EdgeInsets.all(10.0),
+        itemBuilder: (context, index) {
+          return index == 0 ? searchBar() : listItem(index - 1);
+        },
+        itemCount: dataGamesForDisplay.length + 1);
   }
 
-  List<Widget> _getPlannigList(BuildContext context) {
-    List<Widget> planning = new List<Widget>();
-
-    final games = dataGames;
-
-    for (var item in games) {
-      final info = ListTile(
-        leading: versusIcon,
-        title: widget.typeInfo == "eliminatoria"
-            ? Text(item.etapa)
-            : Text("Grupo " + item.nombre),
-        subtitle: Column(
-          children: [
-            SizedBox(height: 15.0),
-            Text(item.jug1 + "     vs     " + item.jug2),
-            SizedBox(height: 15.0),
-            Text(item.horaInicio)
-          ],
-        ),
-      );
-      planning
-        ..add(info)
-        ..add(Divider(
-          color: Color.fromRGBO(11, 164, 93, 1.0),
-        ));
-    }
-    return planning;
+  listItem(index) {
+    return ListTile(
+      leading: versusIcon,
+      title: widget.typeInfo == "eliminatoria"
+          ? Text(dataGamesForDisplay[index].etapa)
+          : Text("Grupo " + dataGamesForDisplay[index].nombre),
+      subtitle: Column(
+        children: [
+          SizedBox(height: 15.0),
+          Text(dataGamesForDisplay[index].jug1 +
+              "     vs     " +
+              dataGamesForDisplay[index].jug2),
+          SizedBox(height: 15.0),
+          Text(dataGamesForDisplay[index].horaInicio)
+        ],
+      ),
+    );
   }
 }
