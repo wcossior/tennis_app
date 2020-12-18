@@ -209,6 +209,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         ..add(info)
         ..add(Divider(
           thickness: 1.0,
+          color: Color.fromRGBO(174, 185, 127, 1.0),
         ));
     }
     return readedCategories;

@@ -27,6 +27,7 @@ class _GamesPageState extends State<GamesPage>
 
   List<dynamic> dataGames = new List<dynamic>();
   List<dynamic> dataGamesForDisplay = new List<dynamic>();
+  var hayData = true;
 
   @override
   void initState() {
@@ -100,7 +101,19 @@ class _GamesPageState extends State<GamesPage>
   // }
 
   Widget _showPlanning(BuildContext context) {
-    if (dataGames.isEmpty) return Center(child: CircularProgressIndicator());
+     Future.delayed(Duration(seconds: 6), () {
+      setState(() {
+        hayData = false;
+      });      
+    });
+    
+    if (dataGames.isEmpty && hayData == true)
+      return Center(child: CircularProgressIndicator());
+      
+
+    if(hayData==false)
+    return Center(child: Text("No hay partidos por ahora"));
+
 
     return ListView.builder(
         padding: EdgeInsets.all(10.0),
@@ -111,21 +124,50 @@ class _GamesPageState extends State<GamesPage>
   }
 
   listItem(index) {
-    return ListTile(
-      leading: versusIcon,
-      title: widget.typeInfo == "eliminatoria"
-          ? Text(dataGamesForDisplay[index].etapa)
-          : Text("Grupo " + dataGamesForDisplay[index].nombre),
-      subtitle: Column(
-        children: [
-          SizedBox(height: 15.0),
-          Text(dataGamesForDisplay[index].jug1 +
-              "     vs     " +
-              dataGamesForDisplay[index].jug2),
-          SizedBox(height: 15.0),
-          Text(dataGamesForDisplay[index].horaInicio)
-        ],
-      ),
+    return Column(
+      children: [
+        ListTile(
+          leading: versusIcon,
+          title: widget.typeInfo == "eliminatoria"
+              ? Text(dataGamesForDisplay[index].etapa)
+              : Text("Grupo " + dataGamesForDisplay[index].nombre),
+          subtitle: Column(
+            children: [
+              SizedBox(height: 15.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                      child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                              style: TextStyle(
+                                  color: Color.fromRGBO(112, 112, 112, 1.0)),
+                              text: dataGamesForDisplay[index].jug1))),
+                  Text(dataGamesForDisplay[index].scoreJugador1.toString()),
+                ],
+              ),
+              SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                      child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                              style: TextStyle(
+                                  color: Color.fromRGBO(112, 112, 112, 1.0)),
+                              text: dataGamesForDisplay[index].jug2))),
+                  Text(dataGamesForDisplay[index].scoreJugador2.toString()),
+                ],
+              ),
+              SizedBox(height: 15.0),
+              Text(dataGamesForDisplay[index].horaInicio),
+            ],
+          ),
+        ),
+        Divider(thickness: 1.0, color: Color.fromRGBO(174, 185, 127, 1.0))
+      ],
     );
   }
 }
