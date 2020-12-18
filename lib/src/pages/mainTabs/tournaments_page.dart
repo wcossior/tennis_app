@@ -3,7 +3,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:tennis_app/src/providers/tournament_provider.dart';
 
-class TournamentsPage extends StatelessWidget {
+import '../categories_page.dart';
+
+class TournamentsPage extends StatefulWidget {
+  @override
+  _TournamentsPageState createState() => _TournamentsPageState();
+}
+
+class _TournamentsPageState extends State<TournamentsPage>
+    with AutomaticKeepAliveClientMixin<TournamentsPage> {
   final Widget playOffIcon =
       SvgPicture.asset('assets/playofficon.svg', semanticsLabel: 'Play Off');
 
@@ -13,30 +21,63 @@ class TournamentsPage extends StatelessWidget {
     height: 20.0,
   );
   @override
+  bool get wantKeepAlive => true;
+
+  List<dynamic> dataTournaments = new List<dynamic>();
+
+  @override
+  void initState() {
+    fetchTournaments().then((data) {
+      setState(() {
+        dataTournaments.addAll(data);
+      });
+    });
+    super.initState();
+  }
+
+  Future<List<dynamic>> fetchTournaments() async {
+    var resp = await tournamentProvider.getAllTournaments();
+
+    return resp;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
         color: Color.fromRGBO(249, 249, 249, 1.0), child: _tournamentList());
   }
 
+  // Widget _tournamentList() {
+  //   return FutureBuilder(
+  //       future: tournamentProvider.getAllTournaments(),
+  //       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+  //         if (snapshot.hasData) {
+  //           return ListView(
+  //             padding: EdgeInsets.all(10.0),
+  //             children: _getTournaments(snapshot.data, context),
+  //           );
+  //         } else {
+  //           return Center(child: CircularProgressIndicator());
+  //         }
+  //       });
+  // }
+
   Widget _tournamentList() {
-    return FutureBuilder(
-        future: tournamentProvider.getAllTournaments(),
-        builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-              padding: EdgeInsets.all(10.0),
-              children: _getTournaments(snapshot.data, context),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+    if (dataTournaments.isEmpty)
+      return Center(child: CircularProgressIndicator());
+
+    return ListView(
+      padding: EdgeInsets.all(10.0),
+      children: _getTournaments(context),
+    );
   }
 
-  List<Widget> _getTournaments(List data, BuildContext context) {
+  List<Widget> _getTournaments(BuildContext context) {
     final List<Widget> tournaments = [];
-
-    data.forEach((tournam) {
+    final tournamentsList = dataTournaments;
+    
+    tournamentsList.forEach((tournam) {
       final widgetTemp = Card(
           elevation: 4.0,
           shape:
@@ -77,10 +118,13 @@ class TournamentsPage extends StatelessWidget {
             minWidth: double.minPositive,
             child: FlatButton(
                 child: Text("VER CATEGORÍAS",
-                    style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+                    style:
+                        TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
                 onPressed: () {
-                  Navigator.pushNamed(context, "categories",
-                      arguments: tournam);
+                  // Navigator.pushNamed(context, "categories",arguments: tournam);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          CategoriesPage(tournament: tournam)));
                 }))
       ],
     );
@@ -99,5 +143,5 @@ class TournamentsPage extends StatelessWidget {
         ],
       ),
     );
-  }  
+  }
 }

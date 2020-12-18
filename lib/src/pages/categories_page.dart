@@ -4,8 +4,8 @@ import 'package:tennis_app/src/models/tournament_model.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
 
 class CategoriesPage extends StatefulWidget {
-  CategoriesPage({Key key}) : super(key: key);
-
+  final Tournament tournament;
+  CategoriesPage({Key key, this.tournament}) : super(key: key);
   @override
   _CategoriesPageState createState() => _CategoriesPageState();
 }
@@ -24,9 +24,28 @@ class _CategoriesPageState extends State<CategoriesPage> {
     height: 60.0,
   );
 
+  List<dynamic> dataCategories = new List<dynamic>();
+
+  @override
+  void initState() {
+    fetchGames().then((data) {
+      setState(() {
+        dataCategories.addAll(data);
+      });
+    });
+    super.initState();
+  }
+
+  Future<List<dynamic>> fetchGames() async {
+    var resp =
+        await categoryProvider.getCategoriesfromThisTournament(widget.tournament.id);
+
+    return resp;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Tournament tournament = ModalRoute.of(context).settings.arguments;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -39,23 +58,33 @@ class _CategoriesPageState extends State<CategoriesPage> {
         iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: _showCategories(tournament),
+      body: _showCategories(context),
     );
   }
 
-  Widget _showCategories(tournament) {
-    return FutureBuilder(
-        future: categoryProvider.getCategoriesfromThisTournament(tournament.id),
-        builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-              padding: EdgeInsets.all(10.0),
-              children: _readCategories(snapshot.data, context),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+  // Widget _showCategories(tournament) {
+  //   return FutureBuilder(
+  //       future: categoryProvider.getCategoriesfromThisTournament(tournament.id),
+  //       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+  //         if (snapshot.hasData) {
+  //           return ListView(
+  //             padding: EdgeInsets.all(10.0),
+  //             children: _readCategories(snapshot.data, context),
+  //           );
+  //         } else {
+  //           return Center(child: CircularProgressIndicator());
+  //         }
+  //       });
+  // }
+
+  Widget _showCategories(BuildContext context) {
+    if (dataCategories.isEmpty)
+      return Center(child: CircularProgressIndicator());
+
+    return ListView(
+      padding: EdgeInsets.all(10.0),
+      children: _readCategories(context),
+    );
   }
 
   List<Widget> _showInformation(category) {
@@ -126,17 +155,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
     }
   }
 
-  List<Widget> _readCategories(List data, BuildContext context) {
-    final categories = data;
+  List<Widget> _readCategories(BuildContext context) {
+    final categories = dataCategories;
     List<Widget> readedCategories = new List<Widget>();
 
     for (var item in categories) {
-      final info = Container(        
+      final info = Container(
         width: double.infinity,
-        child: Card(  
-          color: Color.fromRGBO(249, 249, 249, 1.0),        
-          margin: EdgeInsets.all(0), 
-          elevation: 0,         
+        child: Card(
+          color: Color.fromRGBO(249, 249, 249, 1.0),
+          margin: EdgeInsets.all(0),
+          elevation: 0,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -150,18 +179,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
               ),
               ButtonBar(
                 children: <Widget>[
-                  item.tipo == "roundRobin"?FlatButton(
-                    child: const Text('GRUPOS',
-                        style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
-                    onPressed: () {
-                      Navigator.pushNamed(context, "details_group",arguments: item.id);
-                    },
-                  ):Container(),
+                  item.tipo == "roundRobin"
+                      ? FlatButton(
+                          child: const Text('GRUPOS',
+                              style: TextStyle(
+                                  color: Color.fromRGBO(174, 185, 127, 1.0))),
+                          onPressed: () {
+                            Navigator.pushNamed(context, "details_group",
+                                arguments: item.id);
+                          },
+                        )
+                      : Container(),
                   FlatButton(
                     child: const Text('ELIMINATORIA',
-                        style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+                        style: TextStyle(
+                            color: Color.fromRGBO(174, 185, 127, 1.0))),
                     onPressed: () {
-                      Navigator.pushNamed(context, "details_playoff",arguments: item.id);
+                      Navigator.pushNamed(context, "details_playoff",
+                          arguments: item.id);
                     },
                   ),
                 ],
@@ -176,6 +211,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
           thickness: 1.0,
         ));
     }
-    return readedCategories;    
+    return readedCategories;
   }
 }

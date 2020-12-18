@@ -14,7 +14,7 @@ class GamesPage extends StatefulWidget {
   _GamesPageState createState() => _GamesPageState();
 }
 
-class _GamesPageState extends State<GamesPage> {
+class _GamesPageState extends State<GamesPage> with AutomaticKeepAliveClientMixin<GamesPage> {
   final Widget versusIcon = SvgPicture.asset(
     'assets/iconoVersus.svg',
     semanticsLabel: 'Versusicon',
@@ -22,38 +22,83 @@ class _GamesPageState extends State<GamesPage> {
   );
 
   @override
+  bool get wantKeepAlive => true;
+
+  List<dynamic> dataGames = new List<dynamic>();
+  List<dynamic> dataGamesForDisplay = new List<dynamic>();
+
+
+  @override
+  void initState() {
+    fetchGames().then((data) {
+      setState(() {
+        dataGames.addAll(data);
+        dataGamesForDisplay = dataGames;
+      });
+    });
+    super.initState();
+  }
+
+   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: _showPlanning(widget.typeInfo),
+      body: _showPlanning(context),
     );
   }
 
-  Widget _showPlanning(String typeInfo) {
-    return FutureBuilder(
-        future: typeInfo == "eliminatoria"
-            ? gamesPlayoffProvider.getGamesPlayoffFromACategory(widget.idCategory)
-            : gamesGroupProvider.getGamesGroupFromACategory(widget.idCategory),
-        builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-              padding: EdgeInsets.all(10.0),
-              children: _getPlannigList(snapshot.data, context, typeInfo),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+  Future<List<dynamic>> fetchGames() async {
+    var resp;
+    if (widget.typeInfo == "eliminatoria") {
+      resp = await gamesPlayoffProvider
+          .getGamesPlayoffFromACategory(widget.idCategory);
+    } else {
+      resp = await gamesGroupProvider
+          .getGamesGroupFromACategory(widget.idCategory);
+    }
+
+    return resp;
   }
 
-  List<Widget> _getPlannigList(
-      List data, BuildContext context, String typeInfo) {
+ 
+
+  // Widget _showPlanning(String typeInfo) {
+  //   return FutureBuilder(
+  //       future: typeInfo == "eliminatoria"
+  //           ? gamesPlayoffProvider
+  //               .getGamesPlayoffFromACategory(widget.idCategory)
+  //           : gamesGroupProvider.getGamesGroupFromACategory(widget.idCategory),
+  //       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+  //         if (snapshot.hasData) {
+  //           return ListView(
+  //             padding: EdgeInsets.all(10.0),
+  //             children: _getPlannigList(snapshot.data, context, typeInfo),
+  //           );
+  //         } else {
+  //           return Center(child: CircularProgressIndicator());
+  //         }
+  //       });
+  // }
+
+  Widget _showPlanning(BuildContext context) {
+    if (dataGames.isEmpty) return Center(child: CircularProgressIndicator());
+
+    return ListView(
+      padding: EdgeInsets.all(10.0),
+      children: _getPlannigList(context),
+    );
+  }
+
+  List<Widget> _getPlannigList(BuildContext context) {
     List<Widget> planning = new List<Widget>();
 
-    for (var item in data) {
+    final games = dataGames;
+
+    for (var item in games) {
       final info = ListTile(
         leading: versusIcon,
-        title: typeInfo == "eliminatoria"
+        title: widget.typeInfo == "eliminatoria"
             ? Text(item.etapa)
             : Text("Grupo " + item.nombre),
         subtitle: Column(
