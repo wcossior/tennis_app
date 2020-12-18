@@ -101,19 +101,18 @@ class _GamesPageState extends State<GamesPage>
   // }
 
   Widget _showPlanning(BuildContext context) {
-     Future.delayed(Duration(seconds: 6), () {
-      setState(() {
-        hayData = false;
-      });      
+    Future.delayed(Duration(seconds: 6), () {
+      if (dataGames.isEmpty)
+        setState(() {
+          hayData = false;
+        });
     });
-    
+
     if (dataGames.isEmpty && hayData == true)
       return Center(child: CircularProgressIndicator());
-      
 
-    if(hayData==false)
-    return Center(child: Text("No hay partidos por ahora"));
-
+    if (hayData == false)
+      return Center(child: Text("No hay partidos por ahora"));
 
     return ListView.builder(
         padding: EdgeInsets.all(10.0),
