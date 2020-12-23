@@ -11,6 +11,7 @@ class GamesPlayoff {
 }
 
 class GamePlayoff {
+  String id;
   String etapa;
   String horaInicio;
   String jugadorUnoId;
@@ -21,7 +22,8 @@ class GamePlayoff {
   int scoreJugador2;
 
   GamePlayoff(
-      {this.etapa,
+      {this.id,
+      this.etapa,
       this.horaInicio,
       this.jugadorUnoId,
       this.jugadorDosId,
@@ -31,6 +33,7 @@ class GamePlayoff {
       this.scoreJugador2});
 
   GamePlayoff.fromJsonMap(Map<String, dynamic> json) {
+    id = json["id"];
     etapa = json["etapa"];
     horaInicio = formatDate(json["hora_inicio"]);
     jugadorUnoId = json["jugador_uno_id"];

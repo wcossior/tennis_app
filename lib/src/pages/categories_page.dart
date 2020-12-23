@@ -11,13 +11,7 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-  final Widget tournamenticon = SvgPicture.asset(
-    'assets/tournament.svg',
-    semanticsLabel: 'Tournament',
-    color: Color.fromRGBO(11, 164, 93, 1.0),
-    width: 40.0,
-  );
-
+  
   final Widget categoryIcon = SvgPicture.asset(
     'assets/iconoCategoria.svg',
     semanticsLabel: 'Categoryicon',
@@ -178,7 +172,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ),
               ),
               ButtonBar(
-                children: <Widget>[
+                children:[
                   item.tipo == "roundRobin"
                       ? FlatButton(
                           child: const Text('GRUPOS',

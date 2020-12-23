@@ -21,6 +21,7 @@ class _CategoryProvider {
 
     return await _processResp(url);
   }
+    
 }
 
 final categoryProvider = new _CategoryProvider();
