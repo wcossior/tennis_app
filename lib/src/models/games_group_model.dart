@@ -20,6 +20,7 @@ class GameGroup {
   String jug2;
   int scoreJugador1;
   int scoreJugador2;
+  int nroCancha;
 
   GameGroup(
       {this.id,
@@ -30,7 +31,8 @@ class GameGroup {
       this.jug1,
       this.jug2,
       this.scoreJugador1,
-      this.scoreJugador2});
+      this.scoreJugador2,
+      this.nroCancha});
   GameGroup.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
     nombre = json["nombre"];
@@ -41,6 +43,7 @@ class GameGroup {
     jug2 = json["jug2"];
     scoreJugador1 = json["score_jugador1"];
     scoreJugador2 = json["score_jugador2"];
+    nroCancha = json["numero_cancha"];
   }
 
   String formatDate(dateWithoutFormat) {

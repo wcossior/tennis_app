@@ -5,6 +5,8 @@ import 'package:tennis_app/src/providers/games_group_provider.dart';
 import 'package:tennis_app/src/providers/games_playoff_provider.dart';
 import 'package:tennis_app/src/providers/games_provider.dart';
 
+import 'details_game.dart';
+
 class GamesPage extends StatefulWidget {
   final idCategory;
   final typeInfo;
@@ -27,7 +29,6 @@ class _GamesPageState extends State<GamesPage>
 
   @override
   bool get wantKeepAlive => true;
-
   List<dynamic> dataGames = new List<dynamic>();
   List<dynamic> dataGamesForDisplay = new List<dynamic>();
   var hayData = true;
@@ -35,10 +36,11 @@ class _GamesPageState extends State<GamesPage>
   @override
   void initState() {
     fetchGames().then((data) {
-      setState(() {
-        dataGames.addAll(data);
-        dataGamesForDisplay = dataGames;
-      });
+      if (mounted)
+        setState(() {
+          dataGames.addAll(data);
+          dataGamesForDisplay = dataGames;
+        });
     });
     super.initState();
   }
@@ -69,43 +71,27 @@ class _GamesPageState extends State<GamesPage>
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
+        maxLength: 20,
         decoration: InputDecoration(hintText: 'Ingrese el nombre del jugador'),
         onChanged: (text) {
           text = text.toLowerCase();
-          setState(() {
-            dataGamesForDisplay = dataGames.where((game) {
-              var gamePlayer1 = game.jug1.toLowerCase();
-              var gamePlayer2 = game.jug2.toLowerCase();
+          if (mounted)
+            setState(() {
+              dataGamesForDisplay = dataGames.where((game) {
+                var gamePlayer1 = game.jug1.toLowerCase();
+                var gamePlayer2 = game.jug2.toLowerCase();
 
-              return gamePlayer1.contains(text) || gamePlayer2.contains(text);
-            }).toList();
-          });
+                return gamePlayer1.contains(text) || gamePlayer2.contains(text);
+              }).toList();
+            });
         },
       ),
     );
   }
 
-  // Widget _showPlanning(String typeInfo) {
-  //   return FutureBuilder(
-  //       future: typeInfo == "eliminatoria"
-  //           ? gamesPlayoffProvider
-  //               .getGamesPlayoffFromACategory(widget.idCategory)
-  //           : gamesGroupProvider.getGamesGroupFromACategory(widget.idCategory),
-  //       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-  //         if (snapshot.hasData) {
-  //           return ListView(
-  //             padding: EdgeInsets.all(10.0),
-  //             children: _getPlannigList(snapshot.data, context, typeInfo),
-  //           );
-  //         } else {
-  //           return Center(child: CircularProgressIndicator());
-  //         }
-  //       });
-  // }
-
   Widget _showPlanning(BuildContext context) {
     Future.delayed(Duration(seconds: 6), () {
-      if (dataGames.isEmpty)
+      if (dataGames.isEmpty) if (mounted)
         setState(() {
           hayData = false;
         });
@@ -136,6 +122,15 @@ class _GamesPageState extends State<GamesPage>
           subtitle: Column(
             children: [
               SizedBox(height: 15.0),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Resultado Sets:"),
+                  ],
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -163,121 +158,137 @@ class _GamesPageState extends State<GamesPage>
                   Text(dataGamesForDisplay[index].scoreJugador2.toString()),
                 ],
               ),
-              SizedBox(height: 15.0),
-              Text(dataGamesForDisplay[index].horaInicio),
             ],
           ),
         ),
-        FlatButton(
-          child: const Text('Cambiar Score',
-              style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
-          onPressed: () {
-            showDialog(
-                barrierDismissible: false,
-                context: context,
-                child: AlertDialog(
-                  title: Text(
-                      "Soy un modal"), //akjshdlkfjalksdjflkñajsñdlkfjlñkasjdlkfjaslkdjf
-                  content: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          initialValue: dataGamesForDisplay[index]
-                              .scoreJugador1
-                              .toString(),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          onSaved: (value) {
-                            setState(() {
-                              dataGamesForDisplay[index].scoreJugador1 =
-                                  int.parse(value);
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            icon: const Icon(Icons.sports_baseball),
-                            hintText: 'Ingrese el score del jugador 1',
-                            labelText: 'Score 1',
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Por favor ingrese el score 1';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: dataGamesForDisplay[index]
-                              .scoreJugador2
-                              .toString(),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          onSaved: (value) {
-                            setState(() {
-                              dataGamesForDisplay[index].scoreJugador2 =
-                                  int.parse(value);
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            icon: const Icon(Icons.sports_baseball),
-                            hintText: 'Ingrese el score del jugador 2',
-                            labelText: 'Score 2',
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Por favor ingrese el score 2';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    FlatButton(
-                        child: const Text("Cancel"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          // Scaffold.of(context).showSnackBar(
-                          //     SnackBar(content: Text('Processing Data')));
-                        }),
-                    FlatButton(
-                        child: const Text("Ok"),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                            try {
-                              Navigator.pop(context);
-                              var resp =
-                                  await gamesProvider.updateScoreFromAgame(
-                                      dataGamesForDisplay[index].id,
-                                      dataGamesForDisplay[index].scoreJugador1,
-                                      dataGamesForDisplay[index].scoreJugador2);
-                              if (resp == "score actualizado") {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    backgroundColor:
-                                        Color.fromRGBO(174, 185, 127, 1.0),
-                                    content: Text('Score actualizado')));
-                              }
-                            } catch (e) {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  backgroundColor:
-                                      Color.fromRGBO(174, 185, 127, 1.0),
-                                  content: Text('Hubo un error')));
-                            }
-                          }
-                        }),
-                  ],
-                ));
-          },
-        ),
+        ButtonBar(children: [
+          FlatButton(
+            child: const Text('Cambiar Score',
+                style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+            onPressed: () async {
+              showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  child: await showModalForChangeScore(index));
+            },
+          ),
+          FlatButton(
+            child: const Text('Ver detalles',
+                style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailsGamePage(
+                      game: dataGamesForDisplay[index],
+                      typeGame: widget.typeInfo)));
+            },
+          ),
+        ]),
         Divider(thickness: 1.0, color: Color.fromRGBO(174, 185, 127, 1.0))
       ],
+    );
+  }
+
+  Future<AlertDialog> showModalForChangeScore(index) async {
+    return AlertDialog(
+      title: Text("Editar Score"),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            processScoreJug1(index),
+            processScoreJug2(index),
+          ],
+        ),
+      ),
+      actions: [
+        FlatButton(
+            child: const Text("Cancelar"),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        FlatButton(
+            child: const Text("Ok"),
+            onPressed: () async {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                try {
+                  Navigator.pop(context);
+                  var resp = await gamesProvider.updateScoreFromAgame(
+                      dataGamesForDisplay[index].id,
+                      dataGamesForDisplay[index].scoreJugador1,
+                      dataGamesForDisplay[index].scoreJugador2);
+                  if (resp == "score actualizado") {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
+                        content: Text('Score actualizado')));
+                  }
+                } catch (e) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
+                      content: Text('Hubo un error')));
+                }
+              }
+            }),
+      ],
+    );
+  }
+
+  TextFormField processScoreJug2(index) {
+    return TextFormField(
+      maxLength: 3,
+      initialValue: dataGamesForDisplay[index].scoreJugador2.toString(),
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+      ],
+      onSaved: (value) {
+        if (mounted)
+          setState(() {
+            dataGamesForDisplay[index].scoreJugador2 = int.parse(value);
+          });
+      },
+      decoration: InputDecoration(
+          icon: const Icon(Icons.sports_baseball),
+          hintText: 'Ingrese el score del jugador 2',
+          labelText: "Score ${dataGamesForDisplay[index].jug2}"),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Por favor ingrese el score 2';
+        }
+        return null;
+      },
+    );
+  }
+
+// 'Score ${dataGamesForDisplay[index].jug2}',
+
+  TextFormField processScoreJug1(index) {
+    return TextFormField(
+      maxLength: 3,
+      initialValue: dataGamesForDisplay[index].scoreJugador1.toString(),
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+      ],
+      onSaved: (value) {
+        if (mounted)
+          setState(() {
+            dataGamesForDisplay[index].scoreJugador1 = int.parse(value);
+          });
+      },
+      decoration: InputDecoration(
+        icon: const Icon(Icons.sports_baseball),
+        hintText: 'Ingrese el score del jugador 1',
+        labelStyle: TextStyle(),
+        labelText: 'Score ${dataGamesForDisplay[index].jug1}',
+      ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Por favor ingrese el score 1';
+        }
+        return null;
+      },
     );
   }
 }

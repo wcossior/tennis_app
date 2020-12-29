@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tennis_app/src/pages/categories_page.dart';
+import 'package:tennis_app/src/pages/details_game.dart';
 import 'package:tennis_app/src/pages/mainTabs/home_page.dart';
 import 'package:tennis_app/src/pages/details_group_page.dart';
 import 'package:tennis_app/src/pages/details_playoff_page.dart';
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
         "/": (BuildContext context) => HomePage(),
         "details_group": (BuildContext context) => DetailsGroupPage(),
         "details_playoff": (BuildContext context) => DetailsPlayoffPage(),
-        "categories": (BuildContext context) => CategoriesPage()
+        "categories": (BuildContext context) => CategoriesPage(),
+        "details_game": (BuildContext context) => DetailsGamePage()
       },
     );
   }

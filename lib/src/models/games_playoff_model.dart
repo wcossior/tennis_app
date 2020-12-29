@@ -20,6 +20,7 @@ class GamePlayoff {
   String jug2;
   int scoreJugador1;
   int scoreJugador2;
+  int nroCancha;
 
   GamePlayoff(
       {this.id,
@@ -30,7 +31,8 @@ class GamePlayoff {
       this.jug1,
       this.jug2,
       this.scoreJugador1,
-      this.scoreJugador2});
+      this.scoreJugador2,
+      this.nroCancha});
 
   GamePlayoff.fromJsonMap(Map<String, dynamic> json) {
     id = json["id"];
@@ -42,6 +44,7 @@ class GamePlayoff {
     jug2 = json["jug2"];
     scoreJugador1 = json["score_jugador1"];
     scoreJugador2 = json["score_jugador2"];
+    nroCancha = json["numero_cancha"];
   }
   String formatDate(dateWithoutFormat) {
     DateTime date = DateTime.parse(dateWithoutFormat);

@@ -29,7 +29,7 @@ class _DetailsPlayoffPageState extends State<DetailsPlayoffPage> {
             iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0))
           ),
           body: TabBarView(children: [
-            PlayoffPage(),
+            PlayoffPage(idCategory: idCategory),
             GamesPage(idCategory: idCategory, typeInfo: "eliminatoria")
           ])),
     );
@@ -62,6 +62,7 @@ class _DetailsPlayoffPageState extends State<DetailsPlayoffPage> {
   }
 
   void _changeTitle(int index) {
+    if(mounted)
     setState(() {
       _currentTitle = _titlesTabs[index];
     });

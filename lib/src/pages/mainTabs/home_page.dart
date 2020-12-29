@@ -81,6 +81,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _changeTitle(int index) {
+    if(mounted)
     setState(() {
       _currentTitle = _titlesTabs[index];
     });

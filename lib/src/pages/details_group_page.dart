@@ -61,6 +61,7 @@ class _DetailsGroupPageState extends State<DetailsGroupPage> {
   }
 
   void _changeTitle(int index) {
+    if(mounted)
     setState(() {
       _currentTitle = _titlesTabs[index];
     });

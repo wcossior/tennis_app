@@ -23,6 +23,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   @override
   void initState() {
     fetchGames().then((data) {
+      if(mounted)
       setState(() {
         dataCategories.addAll(data);
       });

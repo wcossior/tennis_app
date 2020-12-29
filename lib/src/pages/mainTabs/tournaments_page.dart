@@ -28,12 +28,15 @@ class _TournamentsPageState extends State<TournamentsPage>
   @override
   void initState() {
     fetchTournaments().then((data) {
+      if(mounted)
       setState(() {
         dataTournaments.addAll(data);
       });
     });
     super.initState();
   }
+
+  
 
   Future<List<dynamic>> fetchTournaments() async {
     var resp = await tournamentProvider.getAllTournaments();
@@ -48,20 +51,6 @@ class _TournamentsPageState extends State<TournamentsPage>
         color: Color.fromRGBO(249, 249, 249, 1.0), child: _tournamentList());
   }
 
-  // Widget _tournamentList() {
-  //   return FutureBuilder(
-  //       future: tournamentProvider.getAllTournaments(),
-  //       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-  //         if (snapshot.hasData) {
-  //           return ListView(
-  //             padding: EdgeInsets.all(10.0),
-  //             children: _getTournaments(snapshot.data, context),
-  //           );
-  //         } else {
-  //           return Center(child: CircularProgressIndicator());
-  //         }
-  //       });
-  // }
 
   Widget _tournamentList() {
     if (dataTournaments.isEmpty)
