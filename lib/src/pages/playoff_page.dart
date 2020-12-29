@@ -17,14 +17,14 @@ class _PlayoffPageState extends State<PlayoffPage>
   String dropdownValue = "Todo";
   Map<int, String> filterOptions = {1: "Todo"};
 
-  var hayData = true;
+  var hayInfo = true;
+
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     fetchGames().then((data) {
-      if(mounted)
       setState(() {
         dataGames = data;
         dataGamesForDisplay = dataGames;
@@ -37,10 +37,15 @@ class _PlayoffPageState extends State<PlayoffPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
+    if (hayInfo && dataGames.isEmpty)
+      return Container(
+          child: Center(child: CircularProgressIndicator()),
+          color: Color.fromRGBO(249, 249, 249, 1.0));
     return Scaffold(
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: _showPlanning(context),
+      body: hayInfo == true
+          ? _showPlanning(context)
+          : Center(child: Text("No hay partidos por ahora")),
     );
   }
 
@@ -61,7 +66,11 @@ class _PlayoffPageState extends State<PlayoffPage>
     var resp;
     resp = await gamesPlayoffProvider
         .getGamesPlayoffFromACategory(widget.idCategory);
-
+    if (resp.isEmpty) {
+      setState(() {
+        hayInfo = false;
+      });
+    }
     return resp;
   }
 
@@ -69,20 +78,19 @@ class _PlayoffPageState extends State<PlayoffPage>
     return Center(
       child: DropdownButton<String>(
         value: dropdownValue,
-        icon: Icon(Icons.arrow_drop_down),
+        icon: Icon(Icons.arrow_drop_down,
+            color: Color.fromRGBO(174, 185, 127, 1.0)),
         iconSize: 24,
         elevation: 16,
-        style: TextStyle(color: Colors.deepPurple),
+        style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
         underline: Container(
           height: 2,
-          color: Colors.deepPurpleAccent,
+          color: Color.fromRGBO(174, 185, 127, 1.0),
         ),
         onChanged: (String text) {
-          if(mounted)
           setState(() {
             dropdownValue = text;
           });
-          if(mounted)
           setState(() {
             if (text == "Todo") {
               dataGamesForDisplay = dataGames;
@@ -107,20 +115,6 @@ class _PlayoffPageState extends State<PlayoffPage>
   }
 
   Widget _showPlanning(BuildContext context) {
-    Future.delayed(Duration(seconds: 6), () {
-      if (dataGames.isEmpty)
-        if(mounted)
-        setState(() {
-          hayData = false;
-        });
-    });
-
-    if (dataGames.isEmpty && hayData == true)
-      return Center(child: CircularProgressIndicator());
-
-    if (hayData == false)
-      return Center(child: Text("No hay partidos por ahora"));
-
     return ListView.builder(
         padding: EdgeInsets.all(10.0),
         itemBuilder: (context, index) {

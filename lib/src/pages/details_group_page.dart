@@ -20,13 +20,16 @@ class _DetailsGroupPageState extends State<DetailsGroupPage> {
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text(_currentTitle,style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),),
-            elevation: 0,
-            backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-            bottom: _tabBar(),
-            centerTitle: true,
-            iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0))
-          ),
+              title: Text(
+                _currentTitle,
+                style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+              ),
+              elevation: 0,
+              backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+              bottom: _tabBar(),
+              centerTitle: true,
+              iconTheme:
+                  IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0))),
           body: TabBarView(children: [
             QualificationPage(),
             GamesPage(idCategory: idCategory, typeInfo: "grupos")
@@ -61,7 +64,6 @@ class _DetailsGroupPageState extends State<DetailsGroupPage> {
   }
 
   void _changeTitle(int index) {
-    if(mounted)
     setState(() {
       _currentTitle = _titlesTabs[index];
     });

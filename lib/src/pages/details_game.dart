@@ -205,7 +205,7 @@ class _DetailsGamePageState extends State<DetailsGamePage> {
                       title: Text("El partido se jugara"),
                       subtitle:
                           Text("Cancha " + widget.game.nroCancha.toString()),
-                    )                    
+                    )
                   ],
                 ),
               ),

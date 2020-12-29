@@ -24,11 +24,11 @@ class _TournamentsPageState extends State<TournamentsPage>
   bool get wantKeepAlive => true;
 
   List<dynamic> dataTournaments = new List<dynamic>();
+  var hayInfo = true;
 
   @override
   void initState() {
     fetchTournaments().then((data) {
-      if(mounted)
       setState(() {
         dataTournaments.addAll(data);
       });
@@ -36,10 +36,13 @@ class _TournamentsPageState extends State<TournamentsPage>
     super.initState();
   }
 
-  
-
   Future<List<dynamic>> fetchTournaments() async {
     var resp = await tournamentProvider.getAllTournaments();
+    if (resp.isEmpty) {
+      setState(() {
+        hayInfo = false;
+      });
+    }
 
     return resp;
   }
@@ -47,10 +50,15 @@ class _TournamentsPageState extends State<TournamentsPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    if (hayInfo && dataTournaments.isEmpty)
+      return Center(child: CircularProgressIndicator());
     return Container(
-        color: Color.fromRGBO(249, 249, 249, 1.0), child: _tournamentList());
+      color: Color.fromRGBO(249, 249, 249, 1.0),
+      child: hayInfo == true
+          ? _tournamentList()
+          : Center(child: Text("No hay torneos por ahora")),
+    );
   }
-
 
   Widget _tournamentList() {
     if (dataTournaments.isEmpty)
@@ -65,7 +73,7 @@ class _TournamentsPageState extends State<TournamentsPage>
   List<Widget> _getTournaments(BuildContext context) {
     final List<Widget> tournaments = [];
     final tournamentsList = dataTournaments;
-    
+
     tournamentsList.forEach((tournam) {
       final widgetTemp = Card(
           elevation: 4.0,

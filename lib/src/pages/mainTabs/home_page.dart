@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
     height: 22.0,
   );
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -30,7 +29,10 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
           backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
           appBar: AppBar(
-            title: Text(_currentTitle, style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),),
+            title: Text(
+              _currentTitle,
+              style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+            ),
             elevation: 0,
             backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
             bottom: _tabBar(),
@@ -43,17 +45,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _tabBar(){
+  Widget _tabBar() {
     return TabBar(
-              onTap: _changeTitle,
-              labelColor: Color.fromRGBO(174, 185, 127, 1.0),
-              indicatorSize: TabBarIndicatorSize.label,
-              unselectedLabelColor: Color.fromRGBO(174, 185, 127, 1.0),  
-              indicatorColor: Color.fromRGBO(174, 185, 127, 1.0),            
-              tabs: _getTabs(),
-            );
+      onTap: _changeTitle,
+      labelColor: Color.fromRGBO(174, 185, 127, 1.0),
+      indicatorSize: TabBarIndicatorSize.label,
+      unselectedLabelColor: Color.fromRGBO(174, 185, 127, 1.0),
+      indicatorColor: Color.fromRGBO(174, 185, 127, 1.0),
+      tabs: _getTabs(),
+    );
   }
-
 
   List<Tab> _getTabs() {
     return [
@@ -62,9 +63,7 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.center,
         child: Stack(children: [
           Container(child: trophyIcon),
-          Container(
-              padding: EdgeInsets.only(left: 16.0),
-              child: trophyIcon)
+          Container(padding: EdgeInsets.only(left: 16.0), child: trophyIcon)
         ]),
       )),
       Tab(
@@ -81,7 +80,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _changeTitle(int index) {
-    if(mounted)
     setState(() {
       _currentTitle = _titlesTabs[index];
     });

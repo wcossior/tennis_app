@@ -31,16 +31,15 @@ class _GamesPageState extends State<GamesPage>
   bool get wantKeepAlive => true;
   List<dynamic> dataGames = new List<dynamic>();
   List<dynamic> dataGamesForDisplay = new List<dynamic>();
-  var hayData = true;
+  var hayInfo = true;
 
   @override
   void initState() {
     fetchGames().then((data) {
-      if (mounted)
-        setState(() {
-          dataGames.addAll(data);
-          dataGamesForDisplay = dataGames;
-        });
+      setState(() {
+        dataGames.addAll(data);
+        dataGamesForDisplay = dataGames;
+      });
     });
     super.initState();
   }
@@ -48,20 +47,39 @@ class _GamesPageState extends State<GamesPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    if (hayInfo && dataGames.isEmpty)
+      return Container(
+          child: Center(child: CircularProgressIndicator()),
+          color: Color.fromRGBO(249, 249, 249, 1.0));
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: _showPlanning(context),
+      body: hayInfo == true
+          ? _showPlanning(context)
+          : Center(child: Text("No hay partidos por ahora")),
     );
   }
 
   Future<List<dynamic>> fetchGames() async {
     var resp;
+
     if (widget.typeInfo == "eliminatoria") {
       resp = await gamesPlayoffProvider
           .getGamesPlayoffFromACategory(widget.idCategory);
+      if (resp.isEmpty) {
+        setState(() {
+          hayInfo = false;
+        });
+      }
     } else {
       resp = await gamesGroupProvider
           .getGamesGroupFromACategory(widget.idCategory);
+      if (resp.isEmpty) {
+        setState(() {
+          hayInfo = false;
+        });
+      }
     }
 
     return resp;
@@ -75,35 +93,22 @@ class _GamesPageState extends State<GamesPage>
         decoration: InputDecoration(hintText: 'Ingrese el nombre del jugador'),
         onChanged: (text) {
           text = text.toLowerCase();
-          if (mounted)
-            setState(() {
-              dataGamesForDisplay = dataGames.where((game) {
-                var gamePlayer1 = game.jug1.toLowerCase();
-                var gamePlayer2 = game.jug2.toLowerCase();
+          setState(() {
+            dataGamesForDisplay = dataGames.where((game) {
+              var gamePlayer1 = game.jug1.toLowerCase();
+              var gamePlayer2 = game.jug2.toLowerCase();
 
-                return gamePlayer1.contains(text) || gamePlayer2.contains(text);
-              }).toList();
-            });
+              return gamePlayer1.contains(text) || gamePlayer2.contains(text);
+            }).toList();
+          });
         },
       ),
     );
   }
 
   Widget _showPlanning(BuildContext context) {
-    Future.delayed(Duration(seconds: 6), () {
-      if (dataGames.isEmpty) if (mounted)
-        setState(() {
-          hayData = false;
-        });
-    });
-
-    if (dataGames.isEmpty && hayData == true)
-      return Center(child: CircularProgressIndicator());
-
-    if (hayData == false)
-      return Center(child: Text("No hay partidos por ahora"));
-
     return ListView.builder(
+        shrinkWrap: true,
         padding: EdgeInsets.all(10.0),
         itemBuilder: (context, index) {
           return index == 0 ? searchBar() : listItem(index - 1);
@@ -243,10 +248,9 @@ class _GamesPageState extends State<GamesPage>
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
       ],
       onSaved: (value) {
-        if (mounted)
-          setState(() {
-            dataGamesForDisplay[index].scoreJugador2 = int.parse(value);
-          });
+        setState(() {
+          dataGamesForDisplay[index].scoreJugador2 = int.parse(value);
+        });
       },
       decoration: InputDecoration(
           icon: const Icon(Icons.sports_baseball),
@@ -261,8 +265,6 @@ class _GamesPageState extends State<GamesPage>
     );
   }
 
-// 'Score ${dataGamesForDisplay[index].jug2}',
-
   TextFormField processScoreJug1(index) {
     return TextFormField(
       maxLength: 3,
@@ -272,10 +274,9 @@ class _GamesPageState extends State<GamesPage>
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
       ],
       onSaved: (value) {
-        if (mounted)
-          setState(() {
-            dataGamesForDisplay[index].scoreJugador1 = int.parse(value);
-          });
+        setState(() {
+          dataGamesForDisplay[index].scoreJugador1 = int.parse(value);
+        });
       },
       decoration: InputDecoration(
         icon: const Icon(Icons.sports_baseball),

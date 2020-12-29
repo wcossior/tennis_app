@@ -11,7 +11,6 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-  
   final Widget categoryIcon = SvgPicture.asset(
     'assets/iconoCategoria.svg',
     semanticsLabel: 'Categoryicon',
@@ -19,11 +18,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
   );
 
   List<dynamic> dataCategories = new List<dynamic>();
+  var hayInfo = true;
 
   @override
   void initState() {
     fetchGames().then((data) {
-      if(mounted)
       setState(() {
         dataCategories.addAll(data);
       });
@@ -32,15 +31,34 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Future<List<dynamic>> fetchGames() async {
-    var resp =
-        await categoryProvider.getCategoriesfromThisTournament(widget.tournament.id);
+    var resp = await categoryProvider
+        .getCategoriesfromThisTournament(widget.tournament.id);
+    if (resp.isEmpty) {
+      setState(() {
+        hayInfo = false;
+      });
+    }
 
     return resp;
   }
 
   @override
   Widget build(BuildContext context) {
-    
+    if (hayInfo && dataCategories.isEmpty)
+      return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              "Categorías",
+              style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+            ),
+            backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+            centerTitle: true,
+            shadowColor: Colors.transparent,
+            iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
+          ),
+          backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+          body: Center(child: CircularProgressIndicator()));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -53,29 +71,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
         iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: _showCategories(context),
+      body: hayInfo == true
+          ? _showCategories(context)
+          : Center(child: Text("No hay categorías por ahora")),
     );
   }
 
-  // Widget _showCategories(tournament) {
-  //   return FutureBuilder(
-  //       future: categoryProvider.getCategoriesfromThisTournament(tournament.id),
-  //       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-  //         if (snapshot.hasData) {
-  //           return ListView(
-  //             padding: EdgeInsets.all(10.0),
-  //             children: _readCategories(snapshot.data, context),
-  //           );
-  //         } else {
-  //           return Center(child: CircularProgressIndicator());
-  //         }
-  //       });
-  // }
-
   Widget _showCategories(BuildContext context) {
-    if (dataCategories.isEmpty)
-      return Center(child: CircularProgressIndicator());
-
     return ListView(
       padding: EdgeInsets.all(10.0),
       children: _readCategories(context),
@@ -173,7 +175,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ),
               ),
               ButtonBar(
-                children:[
+                children: [
                   item.tipo == "roundRobin"
                       ? FlatButton(
                           child: const Text('GRUPOS',
