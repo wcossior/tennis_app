@@ -40,7 +40,7 @@ class _AuspicesProvider {
       var url = await (await uploadTask.onComplete).ref.getDownloadURL();
       uploadedFileURL = url.toString();
 
-      await databaseReference.collection("auspicios").add({
+      var response = await databaseReference.collection("auspicios").add({
         'auspiciante': ausp.auspiciante,
         'nombre_img': img.toString(),
         'url_img': uploadedFileURL,
@@ -49,7 +49,8 @@ class _AuspicesProvider {
       Map resp = {
         "message": "Auspicio agregado",
         "url": uploadedFileURL,
-        "img": img.toString()
+        "img": img.toString(),
+        "id": response.documentID
       };
       return resp;
     } catch (e) {
@@ -58,10 +59,17 @@ class _AuspicesProvider {
     }
   }
 
-  Future<String> deleteAuspiceFromATournament(String id) async {
+  Future<String> deleteAuspiceFromATournament(String id, String url) async {
     try {
+      print("En provider " + id);
+      FirebaseStorage.instance.getReferenceFromUrl(url).then((res) {
+        res.delete().then((res) {
+          print("borrado!");
+        });
+      });
+
       await databaseReference.collection('auspicios').document(id).delete();
-      return "borrado";
+      return "auspicio borrado";
     } catch (e) {
       print(e.toString());
       return null;

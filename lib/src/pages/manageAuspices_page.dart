@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/src/models/auspices_model.dart';
 import 'package:tennis_app/src/providers/auspices_provider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'formAuspice.dart';
 
 class ManageAuspicesPage extends StatefulWidget {
@@ -22,7 +21,6 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
   File img;
   String url;
   set setimg(File value) => setState(() => img = value);
-  String estadoButtonSave = "Guardar";
 
   @override
   void initState() {
@@ -68,26 +66,56 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
           ),
           backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
           body: Center(child: CircularProgressIndicator()));
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Auspicios",
-          style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+        appBar: AppBar(
+          title: Text(
+            "Auspicios",
+            style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+          ),
+          backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+          centerTitle: true,
+          shadowColor: Colors.transparent,
+          iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
         ),
         backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-        centerTitle: true,
-        shadowColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
-      ),
-      backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: Builder(
-          builder: (context) => hayInfo == true
-              ? showAuspices(context)
-              : Center(child: Text("No hay partidos por ahora"))),
-    );
+        body: Builder(
+            builder: (cntxt) => hayInfo == true
+                ? showAuspices(cntxt)
+                : Container(
+                    width: double.infinity,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FlatButton.icon(
+                              onPressed: () {
+                                myController.clear();
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) => Scaffold(
+                                        backgroundColor: Colors.transparent,
+                                        body: Builder(
+                                            builder: (context) =>
+                                                showModalAddAuspices(
+                                                    cntxt, context))));
+                              },
+                              icon: Icon(Icons.add,
+                                  color: Color.fromRGBO(174, 185, 127, 1.0)),
+                              label: Text(
+                                "Agregar",
+                                style: TextStyle(
+                                    color: Color.fromRGBO(174, 185, 127, 1.0)),
+                              )),
+                          Text(
+                            "No hay auspicios",
+                            textAlign: TextAlign.center,
+                          ),
+                        ]))));
   }
 
-  showModalAddAuspices(cntxt) {
+  showModalAddAuspices(BuildContext cntxt, BuildContext cntxtSnackBar) {
     return AlertDialog(
       title: Text("Agregar auspiciante"),
       content: SingleChildScrollView(
@@ -102,22 +130,15 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                 onSaved: (value) {
                   setState(() {
                     auspice.auspiciante = value;
-                    auspice.idTorneo = int.parse(widget.idTournament);                   
+                    auspice.idTorneo = int.parse(widget.idTournament);
                   });
                 },
                 decoration: InputDecoration(
                     icon: const Icon(Icons.supervisor_account),
                     hintText: 'Nombre del auspiciante',
-                    labelText: "Auspiciante"),
-                // validator: (value) {
-                //   if (value.isEmpty) {
-                //     return 'Por favor ingrese un nombre';
-                //   }
-                //   return null;
-                // },
+                    labelText: "Auspiciante"),                
               ),
-              FormAuspice(
-                  callbackimg: (val) => setState(() => img = val))
+              FormAuspice(callbackimg: (val) => setState(() => img = val))
             ],
           ),
         ),
@@ -127,22 +148,26 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
             child: const Text("Cancelar"),
             onPressed: () {
               Navigator.pop(context);
+              myController.clear();
               imageCache.clear();
+              setState(() {
+                img = null;
+              });
             }),
         FlatButton(
             child: const Text("Guardar"),
             onPressed: () async {
-              if (_formKey.currentState.validate()) {
+              if (myController.text.isNotEmpty && img != null) {
                 _formKey.currentState.save();
                 try {
                   Navigator.pop(context);
                   Map resp = await auspiceProvider.addAuspiceForTournament(
                       auspice, img);
-                  myController.clear();
                   setState(() {
                     auspice.nombreImg = resp["img"];
                     auspice.urlImg = resp["url"];
-                    dataAuspices.add(auspice);
+                    auspice.id = resp["id"];
+                    dataAuspices.add(auspice);                  
                   });
 
                   if (resp["message"] == "Auspicio agregado") {
@@ -155,6 +180,10 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                       backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
                       content: Text('Hubo un error')));
                 }
+              } else {
+                Scaffold.of(cntxtSnackBar).showSnackBar(SnackBar(
+                    backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
+                    content: Text('Llene los campos por favor')));
               }
             })
       ],
@@ -166,12 +195,18 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
       children: [
         FlatButton.icon(
             onPressed: () {
+              myController.clear();
               showDialog(
                   barrierDismissible: false,
                   context: context,
-                  builder: (BuildContext context) {
-                    return showModalAddAuspices(cntxt);
-                  });
+                  builder: (context) => Scaffold(
+                      backgroundColor: Colors.transparent,
+                      body: Builder(
+                          builder: (context) =>
+                              showModalAddAuspices(cntxt, context))));
+              // builder: (BuildContext context) {
+              //   return showModalAddAuspices(cntxt);
+              // });
             },
             icon: Icon(Icons.add, color: Color.fromRGBO(174, 185, 127, 1.0)),
             label: Text(
@@ -183,7 +218,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
               shrinkWrap: true,
               padding: EdgeInsets.all(10.0),
               itemBuilder: (context, index) {
-                return listItem(index);
+                return listItem(index, cntxt);
               },
               itemCount: dataAuspices.length),
         ),
@@ -191,7 +226,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
     );
   }
 
-  listItem(index) {
+  listItem(index, BuildContext cntxt) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.0),
       child: Row(
@@ -224,16 +259,25 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
           Container(
               padding: EdgeInsets.only(left: 10.0),
               child: FlatButton.icon(
-                  onPressed: () {
-                    // var filePath =
-                    //     "https://firebasestorage.googleapis.com/v0/b/auspiciosbd-bbd78.appspot.com/o/auspicios%2Fimage_picker1369453094056594627.jpg?alt=media&token=6cc78edc-6c89-47eb-b2cb-5ca6ed64e590";
-                    // FirebaseStorage.instance
-                    //     .getReferenceFromUrl(filePath)
-                    //     .then((res) {
-                    //   res.delete().then((res) {
-                    //     print("Deleted!");
-                    //   });
-                    // });
+                  onPressed: () async {
+                    var resp =
+                        await auspiceProvider.deleteAuspiceFromATournament(
+                            dataAuspices[index].id, dataAuspices[index].urlImg);
+                    setState(() {
+                      dataAuspices.removeAt(index);
+                    });
+                    imageCache.clear();
+                    
+                    if (dataAuspices.isEmpty) {
+                      setState(() {
+                        hayInfo = false;
+                      });
+                    }
+                    if (resp == "auspicio borrado") {
+                      Scaffold.of(cntxt).showSnackBar(SnackBar(
+                          backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
+                          content: Text('Auspicio borrado')));
+                    }
                   },
                   icon: Icon(Icons.delete,
                       color: Color.fromRGBO(246, 108, 94, 1.0)),
@@ -246,4 +290,5 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
     );
   }
 }
+
 typedef void FileCallback(File val);

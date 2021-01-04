@@ -49,13 +49,13 @@ class _FormAuspiceState extends State<FormAuspice> {
               onPressed: chooseFile,
               color: Colors.cyan,
             )
-          : Container(),     
+          : Container(),
       _image != null
           ? RaisedButton(
               child: Text('Cambiar de imagen'),
               onPressed: clearSelection,
             )
-          : Container(),      
+          : Container(),
     ]);
   }
 
@@ -71,8 +71,7 @@ class _FormAuspiceState extends State<FormAuspice> {
     imageCache.clear();
     setState(() {
       _image = null;
-       widget.callbackimg(null);
+      widget.callbackimg(null);
     });
   }
-  
 }
