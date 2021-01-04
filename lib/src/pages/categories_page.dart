@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
+import 'package:tennis_app/src/pages/manageAuspices_page.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoriesPage extends StatefulWidget {
   final Tournament tournament;
@@ -19,6 +21,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   List<dynamic> dataCategories = new List<dynamic>();
   var hayInfo = true;
+  final databaseReference = Firestore.instance;
 
   @override
   void initState() {
@@ -40,6 +43,52 @@ class _CategoriesPageState extends State<CategoriesPage> {
     }
 
     return resp;
+  }
+
+  void createRecord() async {
+    // DocumentReference ref =
+    //     await databaseReference.collection("auspicios").add({
+    //   'auspiciante': 'Coca Cola3',
+    //   'nombre_img': 'imgcocacola3',
+    //   'url_img': 'www.imgcocacola.com3'
+    // });
+
+    // Auspice auspice = new Auspice();
+    // auspice.auspiciante = "Mendocina";
+    // auspice.idTorneo = 3;
+    // auspice.nombreImg = "MendocinaImg";
+    // auspice.urlImg = "www.Mendocina.com";
+
+    // var resp = await auspiceProvider.addAuspiceForTournament(auspice);
+
+    // databaseReference
+    //     .collection("auspicios")
+    //     .getDocuments()
+    //     .then((QuerySnapshot snapshot) {
+    //   snapshot.documents.forEach((f) => print('${f.data}}'));
+    // });
+
+    // var respe = await auspiceProvider.getAuspicesFromThisTournament(2);
+    // respe.forEach((f) => print('En categorias: ${f.id}'));
+
+    // try {
+    //   databaseReference
+    //       .collection('auspicios')
+    //       .document('vxuhwhgRU9jvtpSCDwsl')
+    //       .updateData({
+    //     'auspiciante': 'Pepsi',
+    //     'nombre_img': 'imgPepsi',
+    //     'url_img': 'www.imgPepsi.com'
+    //   });
+    // } catch (e) {
+    //   print(e.toString());
+    // }
+
+    // try {
+    //   databaseReference.collection('auspicios').document('U9k8HnbyLgzMmso5Yfap').delete();
+    // } catch (e) {
+    //   print(e.toString());
+    // }
   }
 
   @override
@@ -78,9 +127,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Widget _showCategories(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(10.0),
-      children: _readCategories(context),
+    return Column(
+      children: [
+        FlatButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ManageAuspicesPage(idTournament: widget.tournament.id)));
+          },
+          child: const Text('Administrar auspicios',
+              style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+        ),
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.all(10.0),
+            children: _readCategories(context),
+          ),
+        ),
+      ],
     );
   }
 

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "497313806988",
+    "firebase_url": "https://auspiciosbd-bbd78-default-rtdb.firebaseio.com",
+    "project_id": "auspiciosbd-bbd78",
+    "storage_bucket": "auspiciosbd-bbd78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497313806988:android:aa056f10d97d6cafa399a9",
+        "android_client_info": {
+          "package_name": "com.example.tennis_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497313806988-k5ejgvecpec9s7ght5266i0klksl8m9q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpWTk0uwpUUxBhn2ajrTNwScPCEMNNN-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497313806988-k5ejgvecpec9s7ght5266i0klksl8m9q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
