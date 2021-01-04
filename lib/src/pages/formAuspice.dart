@@ -1,15 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
 
 import 'manageAuspices_page.dart';
 
 class FormAuspice extends StatefulWidget {
-  final StringCallback callbackurl;
   final FileCallback callbackimg;
-  FormAuspice({Key key, this.callbackimg, this.callbackurl}) : super(key: key);
+  FormAuspice({Key key, this.callbackimg}) : super(key: key);
 
   @override
   _FormAuspiceState createState() => _FormAuspiceState();
@@ -18,7 +15,6 @@ class FormAuspice extends StatefulWidget {
 class _FormAuspiceState extends State<FormAuspice> {
   File _image;
   final picker = ImagePicker();
-  String _uploadedFileURL;
 
   @override
   Widget build(BuildContext context) {
@@ -53,27 +49,13 @@ class _FormAuspiceState extends State<FormAuspice> {
               onPressed: chooseFile,
               color: Colors.cyan,
             )
-          : Container(),
-      // _image != null
-      //     ? RaisedButton(
-      //         child: Text('Subir imagen'),
-      //         onPressed: uploadFile,
-      //         color: Colors.cyan,
-      //       )
-      //     : Container(),
+          : Container(),     
       _image != null
           ? RaisedButton(
               child: Text('Cambiar de imagen'),
               onPressed: clearSelection,
             )
-          : Container(),
-      // Text('Imagen subida'),
-      // _uploadedFileURL != null
-      //     ? Image.network(
-      //         _uploadedFileURL,
-      //         height: 150.0,
-      //       )
-      //     : Container(),
+          : Container(),      
     ]);
   }
 
@@ -92,20 +74,5 @@ class _FormAuspiceState extends State<FormAuspice> {
        widget.callbackimg(null);
     });
   }
-
-  Future uploadFile() async {
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('auspicios/${Path.basename(_image.path)}');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-    print('Imagen subida');
-    storageReference.getDownloadURL().then((fileURL) {
-      setState(() {
-        _uploadedFileURL = fileURL;
-        widget.callbackurl(_uploadedFileURL);
-        print(_uploadedFileURL);
-      });
-    });
-  }
+  
 }

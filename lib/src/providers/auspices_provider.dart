@@ -39,11 +39,6 @@ class _AuspicesProvider {
       StorageUploadTask uploadTask = storageReference.putFile(img);
       var url = await (await uploadTask.onComplete).ref.getDownloadURL();
       uploadedFileURL = url.toString();
-      // print('Imagen subida');
-      // storageReference.getDownloadURL().then((fileURL) {
-      //   uploadedFileURL = fileURL;
-      //   print(uploadedFileURL);
-      // });
 
       await databaseReference.collection("auspicios").add({
         'auspiciante': ausp.auspiciante,
@@ -51,7 +46,11 @@ class _AuspicesProvider {
         'url_img': uploadedFileURL,
         'id_torneo': ausp.idTorneo
       });
-      Map resp = {"message": "Auspicio agregado","url": uploadedFileURL, "img": img.toString()};
+      Map resp = {
+        "message": "Auspicio agregado",
+        "url": uploadedFileURL,
+        "img": img.toString()
+      };
       return resp;
     } catch (e) {
       print(e.toString());

@@ -22,7 +22,6 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
   File img;
   String url;
   set setimg(File value) => setState(() => img = value);
-  set seturl(String value) => setState(() => url = value);
   String estadoButtonSave = "Guardar";
 
   @override
@@ -103,9 +102,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                 onSaved: (value) {
                   setState(() {
                     auspice.auspiciante = value;
-                    auspice.idTorneo = int.parse(widget.idTournament);
-                    // auspice.nombreImg = img.toString();
-                    // auspice.urlImg = url;
+                    auspice.idTorneo = int.parse(widget.idTournament);                   
                   });
                 },
                 decoration: InputDecoration(
@@ -120,7 +117,6 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                 // },
               ),
               FormAuspice(
-                  callbackurl: (val) => setState(() => url = val),
                   callbackimg: (val) => setState(() => img = val))
             ],
           ),
@@ -229,15 +225,15 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
               padding: EdgeInsets.only(left: 10.0),
               child: FlatButton.icon(
                   onPressed: () {
-                    var filePath =
-                        "https://firebasestorage.googleapis.com/v0/b/auspiciosbd-bbd78.appspot.com/o/auspicios%2Fimage_picker1369453094056594627.jpg?alt=media&token=6cc78edc-6c89-47eb-b2cb-5ca6ed64e590";
-                    FirebaseStorage.instance
-                        .getReferenceFromUrl(filePath)
-                        .then((res) {
-                      res.delete().then((res) {
-                        print("Deleted!");
-                      });
-                    });
+                    // var filePath =
+                    //     "https://firebasestorage.googleapis.com/v0/b/auspiciosbd-bbd78.appspot.com/o/auspicios%2Fimage_picker1369453094056594627.jpg?alt=media&token=6cc78edc-6c89-47eb-b2cb-5ca6ed64e590";
+                    // FirebaseStorage.instance
+                    //     .getReferenceFromUrl(filePath)
+                    //     .then((res) {
+                    //   res.delete().then((res) {
+                    //     print("Deleted!");
+                    //   });
+                    // });
                   },
                   icon: Icon(Icons.delete,
                       color: Color.fromRGBO(246, 108, 94, 1.0)),
@@ -250,6 +246,4 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
     );
   }
 }
-
-typedef void StringCallback(String val);
 typedef void FileCallback(File val);
