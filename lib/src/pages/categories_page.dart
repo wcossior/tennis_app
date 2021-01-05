@@ -1,7 +1,10 @@
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
 import 'package:tennis_app/src/pages/manageAuspices_page.dart';
+import 'package:tennis_app/src/providers/auspices_provider.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -18,16 +21,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
     semanticsLabel: 'Categoryicon',
     height: 60.0,
   );
-
+  List<dynamic> dataAuspices = new List<dynamic>();
   List<dynamic> dataCategories = new List<dynamic>();
   var hayInfo = true;
+  var hayInfo2 = true;
   final databaseReference = Firestore.instance;
+
+  int _currentIndex = 0;
 
   @override
   void initState() {
     fetchGames().then((data) {
       setState(() {
         dataCategories.addAll(data);
+      });
+    });
+    fetchAuspices().then((data) {
+      setState(() {
+        dataAuspices.addAll(data);
       });
     });
     super.initState();
@@ -45,50 +56,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
     return resp;
   }
 
-  void createRecord() async {
-    // DocumentReference ref =
-    //     await databaseReference.collection("auspicios").add({
-    //   'auspiciante': 'Coca Cola3',
-    //   'nombre_img': 'imgcocacola3',
-    //   'url_img': 'www.imgcocacola.com3'
-    // });
+  Future<List<dynamic>> fetchAuspices() async {
+    var resp = await auspiceProvider
+        .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
+    
+    if (resp.isEmpty) {
+      setState(() {
+        hayInfo2 = false;
+      });
+    }
+    return resp;
+  }
 
-    // Auspice auspice = new Auspice();
-    // auspice.auspiciante = "Mendocina";
-    // auspice.idTorneo = 3;
-    // auspice.nombreImg = "MendocinaImg";
-    // auspice.urlImg = "www.Mendocina.com";
-
-    // var resp = await auspiceProvider.addAuspiceForTournament(auspice);
-
-    // databaseReference
-    //     .collection("auspicios")
-    //     .getDocuments()
-    //     .then((QuerySnapshot snapshot) {
-    //   snapshot.documents.forEach((f) => print('${f.data}}'));
-    // });
-
-    // var respe = await auspiceProvider.getAuspicesFromThisTournament(2);
-    // respe.forEach((f) => print('En categorias: ${f.id}'));
-
-    // try {
-    //   databaseReference
-    //       .collection('auspicios')
-    //       .document('vxuhwhgRU9jvtpSCDwsl')
-    //       .updateData({
-    //     'auspiciante': 'Pepsi',
-    //     'nombre_img': 'imgPepsi',
-    //     'url_img': 'www.imgPepsi.com'
-    //   });
-    // } catch (e) {
-    //   print(e.toString());
-    // }
-
-    // try {
-    //   databaseReference.collection('auspicios').document('U9k8HnbyLgzMmso5Yfap').delete();
-    // } catch (e) {
-    //   print(e.toString());
-    // }
+  List<T> map<T>(List list, Function handler) {
+    List<T> result = [];
+    for (var i = 0; i < list.length; i++) {
+      result.add(handler(i, list[i]));
+    }
+    return result;
   }
 
   @override
@@ -120,10 +105,91 @@ class _CategoriesPageState extends State<CategoriesPage> {
         iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: hayInfo == true
-          ? _showCategories(context)
-          : Center(child: Text("No hay categorías por ahora")),
+      body: buildBody(),
     );
+  }
+
+  Widget buildBody() {
+    return Column(
+      children: [
+        Expanded(child: buildContent()),
+        buildFooter(),
+      ],
+    );
+  }
+
+  Widget buildContent() {
+    return hayInfo == true
+        ? _showCategories(context)
+        : Center(child: Text("No hay categorías por ahora"));
+  }
+
+  Widget buildFooter() {
+    return hayInfo2 == true
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 10.0,
+                    spreadRadius: 3.0,
+                  ),
+                ]),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: MediaQuery.of(context).size.height * 0.18,
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    pauseAutoPlayOnTouch: true,
+                    aspectRatio: 2.0,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
+                  ),
+                  items: dataAuspices.map((auspice) {
+                    return Builder(builder: (BuildContext context) {
+                      return Container(
+                          height: MediaQuery.of(context).size.height * 0.30,
+                          width: MediaQuery.of(context).size.width,
+                          child: Container(
+                              width: double.infinity,
+                              height: MediaQuery.of(context).size.width * 0.40,
+                              child: FadeInImage(
+                                  placeholder:
+                                      AssetImage("assets/jar-loading.gif"),
+                                  fadeInDuration: Duration(milliseconds: 200),
+                                  image: NetworkImage(auspice.urlImg),
+                                  fit: BoxFit.cover)));
+                    });
+                  }).toList(),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: map<Widget>(dataAuspices, (index, url) {
+                  return Container(
+                    width: 10.0,
+                    height: 10.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentIndex == index
+                          ? Colors.blueAccent
+                          : Colors.grey,
+                    ),
+                  );
+                }),
+              ),
+            ],
+          )
+        : Container();
   }
 
   Widget _showCategories(BuildContext context) {

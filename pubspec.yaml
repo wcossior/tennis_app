@@ -36,7 +36,8 @@ dependencies:
   firebase_analytics: ^5.0.2
   cloud_firestore: ^0.12.9+5
   image_picker: ^0.6.0+17    
-  firebase_storage: ^3.0.3 
+  firebase_storage: ^3.0.3
+  carousel_slider: ^2.2.1
 
 dev_dependencies:
   flutter_test:

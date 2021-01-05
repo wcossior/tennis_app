@@ -24,7 +24,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
 
   @override
   void initState() {
-    fetchGames().then((data) {
+    fetchAuspices().then((data) {
       setState(() {
         dataAuspices.addAll(data);
       });
@@ -38,7 +38,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
     super.dispose();
   }
 
-  Future<List<dynamic>> fetchGames() async {
+  Future<List<dynamic>> fetchAuspices() async {
     var resp = await auspiceProvider
         .getAuspicesFromThisTournament(int.parse(widget.idTournament));
     if (resp.isEmpty) {
