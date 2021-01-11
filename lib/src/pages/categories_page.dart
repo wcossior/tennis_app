@@ -1,8 +1,9 @@
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:carousel_slider/carousel_options.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
+import 'package:tennis_app/src/pages/carouselAuspices.dart';
 import 'package:tennis_app/src/pages/manageAuspices_page.dart';
 import 'package:tennis_app/src/providers/auspices_provider.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
@@ -27,7 +28,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   var hayInfo2 = true;
   final databaseReference = Firestore.instance;
 
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
     super.initState();
   }
 
+  
   Future<List<dynamic>> fetchGames() async {
     var resp = await categoryProvider
         .getCategoriesfromThisTournament(widget.tournament.id);
@@ -59,13 +61,22 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Future<List<dynamic>> fetchAuspices() async {
     var resp = await auspiceProvider
         .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
-    
+
     if (resp.isEmpty) {
       setState(() {
         hayInfo2 = false;
       });
     }
     return resp;
+  }
+
+  getAuspices() async {
+    var resp = await auspiceProvider
+        .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
+    setState(() {
+      dataAuspices.clear();
+      dataAuspices.addAll(resp);
+    });
   }
 
   List<T> map<T>(List list, Function handler) {
@@ -105,16 +116,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
         iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: buildBody(),
+      body: Builder(builder: (cntxt) => buildBody()),
     );
   }
 
   Widget buildBody() {
     return Column(
-      children: [
-        Expanded(child: buildContent()),
-        buildFooter(),
-      ],
+      children: [Expanded(child: buildContent()), buildFooter()],
     );
   }
 
@@ -126,69 +134,71 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   Widget buildFooter() {
     return hayInfo2 == true
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 10.0,
-                    spreadRadius: 3.0,
-                  ),
-                ]),
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.18,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    pauseAutoPlayOnTouch: true,
-                    aspectRatio: 2.0,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                  ),
-                  items: dataAuspices.map((auspice) {
-                    return Builder(builder: (BuildContext context) {
-                      return Container(
-                          height: MediaQuery.of(context).size.height * 0.30,
-                          width: MediaQuery.of(context).size.width,
-                          child: Container(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.width * 0.40,
-                              child: FadeInImage(
-                                  placeholder:
-                                      AssetImage("assets/jar-loading.gif"),
-                                  fadeInDuration: Duration(milliseconds: 200),
-                                  image: NetworkImage(auspice.urlImg),
-                                  fit: BoxFit.cover)));
-                    });
-                  }).toList(),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: map<Widget>(dataAuspices, (index, url) {
-                  return Container(
-                    width: 10.0,
-                    height: 10.0,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentIndex == index
-                          ? Colors.blueAccent
-                          : Colors.grey,
-                    ),
-                  );
-                }),
-              ),
-            ],
-          )
+        // ? Column(
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: <Widget>[
+        //       Container(
+        //         decoration: BoxDecoration(boxShadow: [
+        //           BoxShadow(
+        //             color: Colors.grey,
+        //             blurRadius: 10.0,
+        //             spreadRadius: 3.0,
+        //           ),
+        //         ]),
+        //         child: CarouselSlider(
+        //           options: CarouselOptions(
+        //             height: MediaQuery.of(context).size.height * 0.18,
+        //             autoPlay: true,
+        //             autoPlayInterval: Duration(seconds: 3),
+        //             autoPlayAnimationDuration: Duration(milliseconds: 800),
+        //             autoPlayCurve: Curves.fastOutSlowIn,
+        //             pauseAutoPlayOnTouch: true,
+        //             aspectRatio: 2.0,
+        //             onPageChanged: (index, reason) {
+        //               setState(() {
+        //                 _currentIndex = index;
+        //               });
+        //             },
+        //           ),
+        //           items: dataAuspices.map((auspice) {
+        //             return Builder(builder: (BuildContext context) {
+        //               return Container(
+        //                   height: MediaQuery.of(context).size.height * 0.30,
+        //                   width: MediaQuery.of(context).size.width,
+        //                   child: Container(
+        //                       width: double.infinity,
+        //                       height: MediaQuery.of(context).size.width * 0.40,
+        //                       child: FadeInImage(
+        //                           placeholder:
+        //                               AssetImage("assets/jar-loading.gif"),
+        //                           fadeInDuration: Duration(milliseconds: 200),
+        //                           image: NetworkImage(auspice.urlImg),
+        //                           fit: BoxFit.cover)));
+        //             });
+        //           }).toList(),
+        //         ),
+        //       ),
+        //       Row(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: map<Widget>(dataAuspices, (index, url) {
+        //           return Container(
+        //             width: 10.0,
+        //             height: 10.0,
+        //             margin:
+        //                 EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+        //             decoration: BoxDecoration(
+        //               shape: BoxShape.circle,
+        //               color: _currentIndex == index
+        //                   ? Colors.blueAccent
+        //                   : Colors.grey,
+        //             ),
+        //           );
+        //         }),
+        //       ),
+        //     ],
+        //   )
+        ? CarouselAuspices(idTournament: widget.tournament.id)
+        // currentIndex: _currentIndex, listAuspices: dataAuspices)
         : Container();
   }
 
@@ -312,8 +322,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               style: TextStyle(
                                   color: Color.fromRGBO(174, 185, 127, 1.0))),
                           onPressed: () {
-                            Navigator.pushNamed(context, "details_group",
-                                arguments: item.id);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CategoriesPage(
+                                    tournament: widget.tournament)));
                           },
                         )
                       : Container(),

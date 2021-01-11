@@ -52,7 +52,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (hayInfo && dataAuspices.isEmpty)
+    if (hayInfo == true && dataAuspices.isEmpty)
       return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -79,40 +79,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
           iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
         ),
         backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-        body: Builder(
-            builder: (cntxt) => hayInfo == true
-                ? showAuspices(cntxt)
-                : Container(
-                    width: double.infinity,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          FlatButton.icon(
-                              onPressed: () {
-                                myController.clear();
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) => Scaffold(
-                                        backgroundColor: Colors.transparent,
-                                        body: Builder(
-                                            builder: (context) =>
-                                                showModalAddAuspices(
-                                                    cntxt, context))));
-                              },
-                              icon: Icon(Icons.add,
-                                  color: Color.fromRGBO(174, 185, 127, 1.0)),
-                              label: Text(
-                                "Agregar",
-                                style: TextStyle(
-                                    color: Color.fromRGBO(174, 185, 127, 1.0)),
-                              )),
-                          Text(
-                            "No hay auspicios",
-                            textAlign: TextAlign.center,
-                          ),
-                        ]))));
+        body: Builder(builder: (cntxt) => showAuspices(cntxt)));
   }
 
   showModalAddAuspices(BuildContext cntxt, BuildContext cntxtSnackBar) {
@@ -136,7 +103,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                 decoration: InputDecoration(
                     icon: const Icon(Icons.supervisor_account),
                     hintText: 'Nombre del auspiciante',
-                    labelText: "Auspiciante"),                
+                    labelText: "Auspiciante"),
               ),
               FormAuspice(callbackimg: (val) => setState(() => img = val))
             ],
@@ -167,7 +134,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                     auspice.nombreImg = resp["img"];
                     auspice.urlImg = resp["url"];
                     auspice.id = resp["id"];
-                    dataAuspices.add(auspice);                  
+                    dataAuspices.add(auspice);
                   });
 
                   if (resp["message"] == "Auspicio agregado") {
@@ -267,7 +234,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
                       dataAuspices.removeAt(index);
                     });
                     imageCache.clear();
-                    
+
                     if (dataAuspices.isEmpty) {
                       setState(() {
                         hayInfo = false;

@@ -17,6 +17,12 @@ class _FormAuspiceState extends State<FormAuspice> {
   final picker = ImagePicker();
 
   @override
+  void dispose() {
+    _image = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(children: [
       SizedBox(
