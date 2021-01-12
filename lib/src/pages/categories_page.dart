@@ -322,9 +322,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               style: TextStyle(
                                   color: Color.fromRGBO(174, 185, 127, 1.0))),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CategoriesPage(
-                                    tournament: widget.tournament)));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) => CategoriesPage(
+                            //         tournament: widget.tournament)));
+                            Navigator.pushNamed(context, "details_group",
+                          arguments: item.id);
                           },
                         )
                       : Container(),

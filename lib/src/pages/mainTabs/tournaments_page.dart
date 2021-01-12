@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tennis_app/src/providers/tournament_provider.dart';
 
 import '../categories_page.dart';
+import '../scheduling_page.dart';
 
 class TournamentsPage extends StatefulWidget {
   @override
@@ -122,6 +123,18 @@ class _TournamentsPageState extends State<TournamentsPage>
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
                           CategoriesPage(tournament: tournam)));
+                })),
+        ButtonTheme(
+            minWidth: double.minPositive,
+            child: FlatButton(
+              child: Text("VER PROGRAMACIÓN",
+                    style:
+                        TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+                onPressed: () {
+                  // Navigator.pushNamed(context, "categories",arguments: tournam);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          SchedulingPage(tournament: tournam)));
                 }))
       ],
     );

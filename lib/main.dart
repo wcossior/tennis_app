@@ -5,6 +5,7 @@ import 'package:tennis_app/src/pages/mainTabs/home_page.dart';
 import 'package:tennis_app/src/pages/details_group_page.dart';
 import 'package:tennis_app/src/pages/details_playoff_page.dart';
 import 'package:tennis_app/src/pages/manageAuspices_page.dart';
+import 'package:tennis_app/src/pages/scheduling_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         "details_playoff": (BuildContext context) => DetailsPlayoffPage(),
         "categories": (BuildContext context) => CategoriesPage(),
         "details_game": (BuildContext context) => DetailsGamePage(),
-        "manage_auspices": (BuildContext context) => ManageAuspicesPage()
+        "manage_auspices": (BuildContext context) => ManageAuspicesPage(),
+        "scheduling": (BuildContext context) => SchedulingPage()
       },
     );
   }
