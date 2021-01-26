@@ -15,7 +15,7 @@ class _TournamentProvider {
     return tournaments.items;
   }
 
-  Future<List<dynamic>> getAllTournaments() async {
+  Future<List<Tournament>> getAllTournaments() async {
 
     final url = Uri.https(_url, "/torneos");
 

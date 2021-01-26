@@ -27,21 +27,27 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-          appBar: AppBar(
-            title: Text(
-              _currentTitle,
-              style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+        backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+        appBar: AppBar(
+          title: Text(
+            _currentTitle,
+            style: TextStyle(
+              color: Color.fromRGBO(112, 112, 112, 1.0),
             ),
-            elevation: 0,
-            backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-            bottom: _tabBar(),
           ),
-          body: TabBarView(children: [
+          elevation: 0,
+          backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+          bottom: _tabBar(),
+        ),
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [
             TournamentsPage(),
             MyTournamentsPage(),
             NotificationsPage()
-          ])),
+          ],
+        ),
+      ),
     );
   }
 
@@ -58,25 +64,41 @@ class _HomePageState extends State<HomePage> {
 
   List<Tab> _getTabs() {
     return [
-      Tab(
-          child: Align(
-        alignment: Alignment.center,
-        child: Stack(children: [
-          Container(child: trophyIcon),
-          Container(padding: EdgeInsets.only(left: 16.0), child: trophyIcon)
-        ]),
-      )),
-      Tab(
-          child: Align(
+      drawTabAllTournmaments(),
+      drawTabMyTournmament(),
+      drawTabNotifications()
+    ];
+  }
+
+  Widget drawTabAllTournmaments() {
+    return Tab(
+        child: Align(
+      alignment: Alignment.center,
+      child: Stack(children: [
+        Container(child: trophyIcon),
+        Container(
+          padding: EdgeInsets.only(left: 16.0),
+          child: trophyIcon,
+        )
+      ]),
+    ));
+  }
+
+  Widget drawTabMyTournmament() {
+    return Tab(
+      child: Align(
         alignment: Alignment.center,
         child: trophyIcon,
-      )),
-      Tab(
-          child: Align(
-        alignment: Alignment.center,
-        child: Icon(Icons.notifications_active_rounded),
-      ))
-    ];
+      ),
+    );
+  }
+
+  Widget drawTabNotifications() {
+    return Tab(
+        child: Align(
+      alignment: Alignment.center,
+      child: Icon(Icons.notifications_active_rounded),
+    ));
   }
 
   void _changeTitle(int index) {
