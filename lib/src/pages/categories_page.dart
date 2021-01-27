@@ -1,13 +1,12 @@
-// import 'package:carousel_slider/carousel_options.dart';
-// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tennis_app/src/models/auspices_model.dart';
+import 'package:tennis_app/src/models/category_model.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
 import 'package:tennis_app/src/pages/carouselAuspices.dart';
 import 'package:tennis_app/src/pages/manageAuspices_page.dart';
 import 'package:tennis_app/src/providers/auspices_provider.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoriesPage extends StatefulWidget {
   final Tournament tournament;
@@ -22,13 +21,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
     semanticsLabel: 'Categoryicon',
     height: 60.0,
   );
-  List<dynamic> dataAuspices = new List<dynamic>();
-  List<dynamic> dataCategories = new List<dynamic>();
-  var hayInfo = true;
-  var hayInfo2 = true;
-  final databaseReference = Firestore.instance;
-
-  // int _currentIndex = 0;
+  List<Auspice> dataAuspices = new List<Auspice>();
+  List<Category> dataCategories = new List<Category>();
+  var hasDataCategories = true;
+  var hasDataAuspices = true;
 
   @override
   void initState() {
@@ -45,65 +41,32 @@ class _CategoriesPageState extends State<CategoriesPage> {
     super.initState();
   }
 
-  
-  Future<List<dynamic>> fetchGames() async {
+  Future<List<Category>> fetchGames() async {
     var resp = await categoryProvider
         .getCategoriesfromThisTournament(widget.tournament.id);
     if (resp.isEmpty) {
       setState(() {
-        hayInfo = false;
+        hasDataCategories = false;
       });
     }
 
     return resp;
   }
 
-  Future<List<dynamic>> fetchAuspices() async {
+  Future<List<Auspice>> fetchAuspices() async {
     var resp = await auspiceProvider
         .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
 
     if (resp.isEmpty) {
       setState(() {
-        hayInfo2 = false;
+        hasDataAuspices = false;
       });
     }
     return resp;
   }
 
-  getAuspices() async {
-    var resp = await auspiceProvider
-        .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
-    setState(() {
-      dataAuspices.clear();
-      dataAuspices.addAll(resp);
-    });
-  }
-
-  List<T> map<T>(List list, Function handler) {
-    List<T> result = [];
-    for (var i = 0; i < list.length; i++) {
-      result.add(handler(i, list[i]));
-    }
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (hayInfo && dataCategories.isEmpty)
-      return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Categorías",
-              style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
-            ),
-            backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-            centerTitle: true,
-            shadowColor: Colors.transparent,
-            iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
-          ),
-          backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-          body: Center(child: CircularProgressIndicator()));
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -116,89 +79,34 @@ class _CategoriesPageState extends State<CategoriesPage> {
         iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: Builder(builder: (cntxt) => buildBody()),
+      body: showData(),
     );
   }
 
-  Widget buildBody() {
-    return Column(
-      children: [Expanded(child: buildContent()), buildFooter()],
-    );
+  Widget showData() {
+    if (hasDataCategories && dataCategories.isEmpty)
+      return Center(child: CircularProgressIndicator());
+    if (dataCategories.length == 0) {
+      return Center(child: Text("No hay categorías por ahora"));
+    } else {
+      return Builder(
+        builder: (cntxt) => Column(
+          children: [
+            Expanded(child: buildContent()),
+            buildFooter(),
+          ],
+        ),
+      );
+    }
   }
 
   Widget buildContent() {
-    return hayInfo == true
-        ? _showCategories(context)
-        : Center(child: Text("No hay categorías por ahora"));
+    return _showCategories(context);
   }
 
   Widget buildFooter() {
-    return hayInfo2 == true
-        // ? Column(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: <Widget>[
-        //       Container(
-        //         decoration: BoxDecoration(boxShadow: [
-        //           BoxShadow(
-        //             color: Colors.grey,
-        //             blurRadius: 10.0,
-        //             spreadRadius: 3.0,
-        //           ),
-        //         ]),
-        //         child: CarouselSlider(
-        //           options: CarouselOptions(
-        //             height: MediaQuery.of(context).size.height * 0.18,
-        //             autoPlay: true,
-        //             autoPlayInterval: Duration(seconds: 3),
-        //             autoPlayAnimationDuration: Duration(milliseconds: 800),
-        //             autoPlayCurve: Curves.fastOutSlowIn,
-        //             pauseAutoPlayOnTouch: true,
-        //             aspectRatio: 2.0,
-        //             onPageChanged: (index, reason) {
-        //               setState(() {
-        //                 _currentIndex = index;
-        //               });
-        //             },
-        //           ),
-        //           items: dataAuspices.map((auspice) {
-        //             return Builder(builder: (BuildContext context) {
-        //               return Container(
-        //                   height: MediaQuery.of(context).size.height * 0.30,
-        //                   width: MediaQuery.of(context).size.width,
-        //                   child: Container(
-        //                       width: double.infinity,
-        //                       height: MediaQuery.of(context).size.width * 0.40,
-        //                       child: FadeInImage(
-        //                           placeholder:
-        //                               AssetImage("assets/jar-loading.gif"),
-        //                           fadeInDuration: Duration(milliseconds: 200),
-        //                           image: NetworkImage(auspice.urlImg),
-        //                           fit: BoxFit.cover)));
-        //             });
-        //           }).toList(),
-        //         ),
-        //       ),
-        //       Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: map<Widget>(dataAuspices, (index, url) {
-        //           return Container(
-        //             width: 10.0,
-        //             height: 10.0,
-        //             margin:
-        //                 EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-        //             decoration: BoxDecoration(
-        //               shape: BoxShape.circle,
-        //               color: _currentIndex == index
-        //                   ? Colors.blueAccent
-        //                   : Colors.grey,
-        //             ),
-        //           );
-        //         }),
-        //       ),
-        //     ],
-        //   )
+    return hasDataAuspices == true
         ? CarouselAuspices(idTournament: widget.tournament.id)
-        // currentIndex: _currentIndex, listAuspices: dataAuspices)
         : Container();
   }
 
@@ -224,9 +132,81 @@ class _CategoriesPageState extends State<CategoriesPage> {
     );
   }
 
-  List<Widget> _showInformation(category) {
+  List<Widget> _readCategories(BuildContext context) {
+    final categories = dataCategories;
+    List<Widget> readedCategories = new List<Widget>();
+
+    for (Category item in categories) {
+      final category = Container(
+        width: double.infinity,
+        child: drawCard(item),
+      );
+      readedCategories
+        ..add(category)
+        ..add(
+          Divider(
+            thickness: 1.0,
+            color: Color.fromRGBO(174, 185, 127, 1.0),
+          ),
+        );
+    }
+    return readedCategories;
+  }
+
+  Widget drawCard(Category item) {
+    return Card(
+      color: Color.fromRGBO(249, 249, 249, 1.0),
+      margin: EdgeInsets.all(0),
+      elevation: 0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: categoryIcon,
+            title: Text(item.nombre, style: TextStyle(fontSize: 20.0)),
+            subtitle: _showInformation(item),
+          ),
+          ButtonBar(
+            children: [drawButtonGroups(item), drawButtonPlayOffs(item)],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget drawButtonGroups(Category item) {
+    return item.tipo == "roundRobin"
+        ? FlatButton(
+            child: const Text('GRUPOS',
+                style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+            onPressed: () {
+              Navigator.pushNamed(context, "details_group", arguments: item.id);
+            },
+          )
+        : Container();
+  }
+
+  Widget drawButtonPlayOffs(Category item) {
+    return FlatButton(
+      child: const Text('ELIMINATORIA',
+          style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+      onPressed: () {
+        Navigator.pushNamed(context, "details_playoff", arguments: item.id);
+      },
+    );
+  }
+
+  Widget _showInformation(Category category) {
     if (category.tipo == "cuadroAvance") {
-      return [
+      return drawInformationForCuadroAvance(category);
+    } else {
+      return drawInformationForRoundRobin(category);
+    }
+  }
+
+  Widget drawInformationForCuadroAvance(Category category) {
+    return Column(
+      children: [
         SizedBox(
           height: 10.0,
         ),
@@ -246,9 +226,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
             Text(category.numeroJugadores.toString()),
           ],
         ),
-      ];
-    } else {
-      return [
+      ],
+    );
+  }
+
+  drawInformationForRoundRobin(Category category) {
+    return Column(
+      children: [
         SizedBox(
           height: 10.0,
         ),
@@ -288,70 +272,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
             Text(category.numeroJugadoresGrupo.toString()),
           ],
         ),
-      ];
-    }
-  }
-
-  List<Widget> _readCategories(BuildContext context) {
-    final categories = dataCategories;
-    List<Widget> readedCategories = new List<Widget>();
-
-    for (var item in categories) {
-      final info = Container(
-        width: double.infinity,
-        child: Card(
-          color: Color.fromRGBO(249, 249, 249, 1.0),
-          margin: EdgeInsets.all(0),
-          elevation: 0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: categoryIcon,
-                title: Text(item.nombre, style: TextStyle(fontSize: 20.0)),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _showInformation(item),
-                ),
-              ),
-              ButtonBar(
-                children: [
-                  item.tipo == "roundRobin"
-                      ? FlatButton(
-                          child: const Text('GRUPOS',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(174, 185, 127, 1.0))),
-                          onPressed: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => CategoriesPage(
-                            //         tournament: widget.tournament)));
-                            Navigator.pushNamed(context, "details_group",
-                          arguments: item.id);
-                          },
-                        )
-                      : Container(),
-                  FlatButton(
-                    child: const Text('ELIMINATORIA',
-                        style: TextStyle(
-                            color: Color.fromRGBO(174, 185, 127, 1.0))),
-                    onPressed: () {
-                      Navigator.pushNamed(context, "details_playoff",
-                          arguments: item.id);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-      readedCategories
-        ..add(info)
-        ..add(Divider(
-          thickness: 1.0,
-          color: Color.fromRGBO(174, 185, 127, 1.0),
-        ));
-    }
-    return readedCategories;
+      ],
+    );
   }
 }

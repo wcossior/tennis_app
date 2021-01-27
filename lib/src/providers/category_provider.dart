@@ -16,12 +16,10 @@ class _CategoryProvider {
   }
 
   Future<List<dynamic>> getCategoriesfromThisTournament(String id) async {
-
     final url = Uri.https(_url, "/categorias/$id");
 
     return await _processResp(url);
   }
-    
 }
 
 final categoryProvider = new _CategoryProvider();

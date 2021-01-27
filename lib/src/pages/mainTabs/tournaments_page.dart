@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:tennis_app/src/providers/tournament_provider.dart';
-
 import '../categories_page.dart';
 import '../scheduling_page.dart';
 
