@@ -92,25 +92,21 @@ class _CategoriesPageState extends State<CategoriesPage> {
       return Builder(
         builder: (cntxt) => Column(
           children: [
-            Expanded(child: buildContent()),
-            buildFooter(),
+            Expanded(child: showCategories(context)),
+            showCarousel(),
           ],
         ),
       );
     }
   }
 
-  Widget buildContent() {
-    return _showCategories(context);
-  }
-
-  Widget buildFooter() {
+  Widget showCarousel() {
     return hasDataAuspices == true
         ? CarouselAuspices(idTournament: widget.tournament.id)
         : Container();
   }
 
-  Widget _showCategories(BuildContext context) {
+  Widget showCategories(BuildContext context) {
     return Column(
       children: [
         FlatButton(
