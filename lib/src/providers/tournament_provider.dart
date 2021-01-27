@@ -16,7 +16,6 @@ class _TournamentProvider {
   }
 
   Future<List<Tournament>> getAllTournaments() async {
-
     final url = Uri.https(_url, "/torneos");
 
     return await _processResp(url);

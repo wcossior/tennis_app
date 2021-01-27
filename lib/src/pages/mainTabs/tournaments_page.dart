@@ -18,7 +18,7 @@ class _TournamentsPageState extends State<TournamentsPage>
   bool get wantKeepAlive => true;
 
   List<Tournament> dataTournaments = new List<Tournament>();
-  var hayTorneos = true;
+  var hasData = true;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _TournamentsPageState extends State<TournamentsPage>
     var resp = await tournamentProvider.getAllTournaments();
     if (resp.isEmpty) {
       setState(() {
-        hayTorneos = false;
+        hasData = false;
       });
     }
 
@@ -44,14 +44,17 @@ class _TournamentsPageState extends State<TournamentsPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (hayTorneos && dataTournaments.isEmpty)
+    if (hasData && dataTournaments.isEmpty)
       return Center(child: CircularProgressIndicator());
+    if (dataTournaments.length == 0) {
+      return Center(
+        child: Text("No hay torneos"),
+      );
+    }
 
     return Container(
       color: Color.fromRGBO(249, 249, 249, 1.0),
-      child: hayTorneos == true
-          ? _tournamentList()
-          : Center(child: Text("No hay torneos por ahora")),
+      child: _tournamentList(),
     );
   }
 
