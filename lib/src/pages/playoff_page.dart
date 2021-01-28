@@ -17,7 +17,7 @@ class _PlayoffPageState extends State<PlayoffPage>
   String dropdownValue = "Todo";
   Map<int, String> filterOptions = {1: "Todo"};
 
-  var hayInfo = true;
+  var hasData = true;
 
   @override
   bool get wantKeepAlive => true;
@@ -37,25 +37,22 @@ class _PlayoffPageState extends State<PlayoffPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (hayInfo && dataGames.isEmpty)
-      return Container(
-          child: Center(child: CircularProgressIndicator()),
-          color: Color.fromRGBO(249, 249, 249, 1.0));
+    if (hasData && dataGames.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+    if (dataGames.length == 0) {
+      return Center(child: Text("No hay partidos por ahora"));
+    }
     return Scaffold(
-      backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: hayInfo == true
-          ? _showPlanning(context)
-          : Center(child: Text("No hay partidos por ahora")),
-    );
+        backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
+        body: _showPlanning(context));
   }
 
-  getEtapas() {
-    var etapa = "";
+  void getEtapas() {
     var index = 2;
 
     for (var i = 0; i < dataGames.length; i++) {
-      if (dataGames[i].etapa != etapa) {
-        etapa = dataGames[i].etapa;
+      if (!filterOptions.containsValue(dataGames[i].etapa)) {
         filterOptions[index] = dataGames[i].etapa;
         index++;
       }
@@ -68,13 +65,28 @@ class _PlayoffPageState extends State<PlayoffPage>
         .getGamesPlayoffFromACategory(widget.idCategory);
     if (resp.isEmpty) {
       setState(() {
-        hayInfo = false;
+        hasData = false;
       });
     }
     return resp;
   }
 
-  filterDropDown() {
+  void filter(String text) {
+    setState(() {
+      dropdownValue = text;
+      if (text == "Todo") {
+        dataGamesForDisplay = dataGames;
+      } else {
+        dataGamesForDisplay = dataGames.where((game) {
+          var etapaGame = game.etapa;
+
+          return etapaGame.contains(text);
+        }).toList();
+      }
+    });
+  }
+
+  Widget filterDropDown() {
     return Center(
       child: DropdownButton<String>(
         value: dropdownValue,
@@ -87,22 +99,7 @@ class _PlayoffPageState extends State<PlayoffPage>
           height: 2,
           color: Color.fromRGBO(174, 185, 127, 1.0),
         ),
-        onChanged: (String text) {
-          setState(() {
-            dropdownValue = text;
-          });
-          setState(() {
-            if (text == "Todo") {
-              dataGamesForDisplay = dataGames;
-            } else {
-              dataGamesForDisplay = dataGames.where((game) {
-                var etapaGame = game.etapa;
-
-                return etapaGame.contains(text);
-              }).toList();
-            }
-          });
-        },
+        onChanged: (String text) => filter(text),
         items:
             filterOptions.values.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
@@ -123,7 +120,13 @@ class _PlayoffPageState extends State<PlayoffPage>
         itemCount: dataGamesForDisplay.length + 1);
   }
 
-  listItem(index) {
+  Widget listItem(index) {
+    String namePlayer1 = dataGamesForDisplay[index].jug1;
+    String scorePlayer1 = dataGamesForDisplay[index].scoreJugador1.toString();
+
+    String namePlayer2 = dataGamesForDisplay[index].jug2;
+    String scorePlayer2 = dataGamesForDisplay[index].scoreJugador2.toString();
+
     return Column(
       children: [
         ListTile(
@@ -131,47 +134,44 @@ class _PlayoffPageState extends State<PlayoffPage>
           subtitle: Column(
             children: [
               SizedBox(height: 15.0),
-              Container(
-                margin: EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text("Resultado Sets:"),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                      child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                              style: TextStyle(
-                                  color: Color.fromRGBO(112, 112, 112, 1.0)),
-                              text: dataGamesForDisplay[index].jug1))),
-                  Text(dataGamesForDisplay[index].scoreJugador1.toString()),
-                ],
-              ),
+              drawLabelResults(),
+              drawPlayer(namePlayer1, scorePlayer1),
               SizedBox(height: 8.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                      child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                              style: TextStyle(
-                                  color: Color.fromRGBO(112, 112, 112, 1.0)),
-                              text: dataGamesForDisplay[index].jug2))),
-                  Text(dataGamesForDisplay[index].scoreJugador2.toString()),
-                ],
-              ),
+              drawPlayer(namePlayer2, scorePlayer2),
             ],
           ),
         ),
         Divider(thickness: 1.0, color: Color.fromRGBO(174, 185, 127, 1.0))
       ],
+    );
+  }
+
+  Widget drawPlayer(String name, String score) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+                style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+                text: name),
+          ),
+        ),
+        Text(score),
+      ],
+    );
+  }
+
+  Container drawLabelResults() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text("Resultado Sets:"),
+        ],
+      ),
     );
   }
 }

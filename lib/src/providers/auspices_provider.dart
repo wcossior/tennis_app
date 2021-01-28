@@ -5,7 +5,7 @@ import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 
 class _AuspicesProvider {
-  List<dynamic> auspices = [];
+  List<Auspice> auspices = [];
   final databaseReference = Firestore.instance;
   String uploadedFileURL;
 
@@ -14,7 +14,7 @@ class _AuspicesProvider {
     return auspices.items;
   }
 
-  Future<List<dynamic>> getAuspicesFromThisTournament(int id) async {
+  Future<List<Auspice>> getAuspicesFromThisTournament(int id) async {
     try {
       var resp;
       var data = (await databaseReference

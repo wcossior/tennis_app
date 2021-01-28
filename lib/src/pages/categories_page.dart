@@ -56,7 +56,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Future<List<Auspice>> fetchAuspices() async {
     var resp = await auspiceProvider
         .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
-
     if (resp.isEmpty) {
       setState(() {
         hasDataAuspices = false;
