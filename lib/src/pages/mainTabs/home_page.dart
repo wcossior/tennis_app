@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:tennis_app/src/pages/mainTabs/myTournaments_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/notifications_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/tournaments_page.dart';
 
@@ -13,8 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> _titlesTabs = ["Torneos", "Mis torneos", "Notificaciones"];
-  String _currentTitle = "Torneos";
+  final List<String> _titlesTabs = ["Mis torneos", "Notificaciones"];
+  String _currentTitle = "Mis torneos";
   final Widget trophyIcon = SvgPicture.asset(
     'assets/trophy.svg',
     semanticsLabel: 'Trophyicon',
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
         appBar: AppBar(
@@ -43,7 +42,6 @@ class _HomePageState extends State<HomePage> {
           physics: NeverScrollableScrollPhysics(),
           children: [
             TournamentsPage(),
-            MyTournamentsPage(),
             NotificationsPage()
           ],
         ),
@@ -65,7 +63,6 @@ class _HomePageState extends State<HomePage> {
   List<Tab> _getTabs() {
     return [
       drawTabAllTournmaments(),
-      drawTabMyTournmament(),
       drawTabNotifications()
     ];
   }
@@ -84,15 +81,7 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget drawTabMyTournmament() {
-    return Tab(
-      child: Align(
-        alignment: Alignment.center,
-        child: trophyIcon,
-      ),
-    );
-  }
-
+  
   Widget drawTabNotifications() {
     return Tab(
         child: Align(

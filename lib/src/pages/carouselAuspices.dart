@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:tennis_app/src/providers/auspices_provider.dart';
 
 class CarouselAuspices extends StatefulWidget {
-  CarouselAuspices({Key key})
-      : super(key: key);
+  CarouselAuspices({Key key}) : super(key: key);
 
   @override
   _CarouselAuspicesState createState() => _CarouselAuspicesState();
-  
 }
 
 class _CarouselAuspicesState extends State<CarouselAuspices> {
@@ -18,7 +16,9 @@ class _CarouselAuspicesState extends State<CarouselAuspices> {
   Widget build(BuildContext context) {
     final auspicesBloc = AuspicesProvider.of(context);
     final auspices = auspicesBloc.auspices;
-    
+
+    if (auspices.isEmpty) return Container();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -32,7 +32,7 @@ class _CarouselAuspicesState extends State<CarouselAuspices> {
           ]),
           child: CarouselSlider(
             options: CarouselOptions(
-              height:  MediaQuery.of(context).size.height * 0.18,
+              height: MediaQuery.of(context).size.height * 0.18,
               autoPlay: true,
               autoPlayInterval: Duration(seconds: 3),
               autoPlayAnimationDuration: Duration(milliseconds: 800),

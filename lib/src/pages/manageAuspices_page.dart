@@ -53,6 +53,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
   FloatingActionButton drawButtonAddAuspice(BuildContext scaffoldContext,
       AuspicesBloc auspicesBloc, ImgBloc imgBloc) {
     return FloatingActionButton(
+      backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
       child: Icon(Icons.add_to_photos),
       onPressed: () {
         myController.clear();
@@ -86,44 +87,51 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
         ),
       ),
       actions: [
-        FlatButton(
-            child: const Text("Cancelar"),
-            onPressed: () {
-              Navigator.pop(context);
-              myController.clear();
-              imgBloc.imgSink(null);
-            }),
-        FlatButton(
-            child: const Text("Guardar"),
-            onPressed: () async {
-              if (myController.text.isNotEmpty && imgBloc.img != null) {
-                _formKey.currentState.save();
-                try {
-                  Navigator.pop(context);
-
-                  Map resp = await auspicesBloc.addAuspice(
-                      auspice, imgBloc.img, int.parse(widget.idTournament));
-
-                  if (resp["message"] == "Auspicio agregado") {
-                    print("miau");
-                    imgBloc.imgSink(null);
-                    Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
-                        backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
-                        content: Text('Auspicio agregado')));
-                  }
-                } catch (e) {
-                  Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
-                      backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
-                      content: Text("Hubo un error")));
-                }
-              } else {
-                Scaffold.of(cntxtSnackBar).showSnackBar(SnackBar(
-                    backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
-                    content: Text('Llene los campos por favor')));
-              }
-            })
+        drawButtonCancel(imgBloc),
+        drawButtonSave(imgBloc, auspicesBloc, scaffoldContext, cntxtSnackBar)
       ],
     );
+  }
+
+  FlatButton drawButtonSave(ImgBloc imgBloc, AuspicesBloc auspicesBloc, BuildContext scaffoldContext, BuildContext cntxtSnackBar) {
+    return FlatButton(
+          child: const Text("Guardar"),
+          onPressed: () async {
+            if (myController.text.isNotEmpty && imgBloc.img != null) {
+              _formKey.currentState.save();
+              try {
+                Navigator.pop(context);
+
+                Map resp = await auspicesBloc.addAuspice(
+                    auspice, imgBloc.img, int.parse(widget.idTournament));
+
+                if (resp["message"] == "Auspicio agregado") {
+                  imgBloc.imgSink(null);
+                  Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+                      backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
+                      content: Text('Auspicio agregado')));
+                }
+              } catch (e) {
+                Scaffold.of(scaffoldContext).showSnackBar(SnackBar(
+                    backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
+                    content: Text("Hubo un error")));
+              }
+            } else {
+              Scaffold.of(cntxtSnackBar).showSnackBar(SnackBar(
+                  backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
+                  content: Text('Llene los campos por favor')));
+            }
+          });
+  }
+
+  FlatButton drawButtonCancel(ImgBloc imgBloc) {
+    return FlatButton(
+          child: const Text("Cancelar"),
+          onPressed: () {
+            Navigator.pop(context);
+            myController.clear();
+            imgBloc.imgSink(null);
+          });
   }
 
   FormAuspice drawImgField() => FormAuspice();
@@ -157,7 +165,7 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
 
           if (auspices.length == 0) {
             return Center(
-              child: Text("No hay auspicios perra"),
+              child: Text("No hay auspicios"),
             );
           }
           return ListView.builder(
@@ -201,32 +209,34 @@ class _ManageAuspicesPageState extends State<ManageAuspicesPage> {
             ),
           ),
           Container(
-              padding: EdgeInsets.only(left: 10.0),
-              child: FlatButton.icon(
-                  onPressed: () async {
-                    try {
-                      var resp = await auspicesBloc.deleteAuspice(
-                        auspices[index].id,
-                        auspices[index].urlImg,
-                        int.parse(widget.idTournament),
-                      );
-                      if (resp == "auspicio borrado") {
-                        Scaffold.of(cntxt).showSnackBar(SnackBar(
-                            backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
-                            content: Text('Auspicio borrado')));
-                      }
-                    } catch (e) {
-                      Scaffold.of(cntxt).showSnackBar(SnackBar(
-                          backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
-                          content: Text("Hubo un error")));
-                    }
-                  },
-                  icon: Icon(Icons.delete,
-                      color: Color.fromRGBO(246, 108, 94, 1.0)),
-                  label: Text(
-                    "Borrar",
-                    style: TextStyle(color: Color.fromRGBO(246, 108, 94, 1.0)),
-                  )))
+            padding: EdgeInsets.only(left: 10.0),
+            child: FlatButton.icon(
+              onPressed: () async {
+                try {
+                  var resp = await auspicesBloc.deleteAuspice(
+                    auspices[index].id,
+                    auspices[index].urlImg,
+                    int.parse(widget.idTournament),
+                  );
+                  if (resp == "auspicio borrado") {
+                    Scaffold.of(cntxt).showSnackBar(SnackBar(
+                        backgroundColor: Color.fromRGBO(174, 185, 127, 1.0),
+                        content: Text('Auspicio borrado')));
+                  }
+                } catch (e) {
+                  Scaffold.of(cntxt).showSnackBar(SnackBar(
+                      backgroundColor: Color.fromRGBO(246, 108, 94, 1.0),
+                      content: Text("Hubo un error")));
+                }
+              },
+              icon:
+                  Icon(Icons.delete, color: Color.fromRGBO(246, 108, 94, 1.0)),
+              label: Text(
+                "Borrar",
+                style: TextStyle(color: Color.fromRGBO(246, 108, 94, 1.0)),
+              ),
+            ),
+          )
         ],
       ),
     );
