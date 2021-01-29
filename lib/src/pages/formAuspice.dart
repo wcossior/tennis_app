@@ -1,82 +1,75 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'manageAuspices_page.dart';
+import 'package:tennis_app/src/providers/img_provider.dart';
 
 class FormAuspice extends StatefulWidget {
-  final FileCallback callbackimg;
-  FormAuspice({Key key, this.callbackimg}) : super(key: key);
+  FormAuspice({Key key}) : super(key: key);
 
   @override
   _FormAuspiceState createState() => _FormAuspiceState();
 }
 
 class _FormAuspiceState extends State<FormAuspice> {
-  File _image;
   final picker = ImagePicker();
 
   @override
-  void dispose() {
-    _image = null;
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      SizedBox(
-        height: 14.0,
-      ),
-      Row(
-        children: [
-          Icon(Icons.image, color: Color.fromRGBO(112, 112, 112, 1.0)),
-          SizedBox(
-            width: 15.0,
-          ),
-          Text('Elige una imagen'),
-        ],
-      ),
-      SizedBox(
-        height: 14.0,
-      ),
-      _image != null
-          ? Image.asset(
-              _image.path,
-              height: 150.0,
-            )
-          : Image(
-              image: AssetImage("assets/defimg.jpg"),
-              height: 150.0,
+    final imgBloc = ImgProvider.of(context);
+    return StreamBuilder(
+        stream: imgBloc.imgStream,
+        builder: (context, snapshot) {
+          File img = snapshot.data;
+          return Column(children: [
+            SizedBox(
+              height: 14.0,
             ),
-      _image == null
-          ? RaisedButton(
-              child: Text('Choose File'),
-              onPressed: chooseFile,
-              color: Colors.cyan,
-            )
-          : Container(),
-      _image != null
-          ? RaisedButton(
-              child: Text('Cambiar de imagen'),
-              onPressed: clearSelection,
-            )
-          : Container(),
-    ]);
+            Row(
+              children: [
+                Icon(Icons.image, color: Color.fromRGBO(112, 112, 112, 1.0)),
+                SizedBox(
+                  width: 15.0,
+                ),
+                Text('Elige una imagen'),
+              ],
+            ),
+            SizedBox(
+              height: 14.0,
+            ),
+            img != null
+                ? Image.asset(
+                    img.path,
+                    height: 150.0,
+                  )
+                : Image(
+                    image: AssetImage("assets/defimg.jpg"),
+                    height: 150.0,
+                  ),
+            img == null
+                ? RaisedButton(
+                    child: Text('Choose File'),
+                    onPressed: () async => await chooseFile(imgBloc),
+                    color: Colors.cyan,
+                  )
+                : Container(),
+            img != null
+                ? RaisedButton(
+                    child: Text('Cambiar de imagen'),
+                    onPressed: ()=>clearSelection(imgBloc),
+                  )
+                : Container(),
+          ]);
+        });
   }
 
-  Future chooseFile() async {
+  Future chooseFile(ImgBloc imgBloc) async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      _image = File(pickedFile.path);
-      widget.callbackimg(_image);
-    });
+    imgBloc.imgSink(File(pickedFile.path));
+  
   }
 
-  clearSelection() {
+  clearSelection(ImgBloc imgBloc) {
     imageCache.clear();
-    setState(() {
-      _image = null;
-      widget.callbackimg(null);
-    });
+    imgBloc.imgSink(null);
   }
 }

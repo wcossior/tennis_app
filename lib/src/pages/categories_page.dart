@@ -33,11 +33,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
         dataCategories.addAll(data);
       });
     });
-    fetchAuspices().then((data) {
-      setState(() {
-        dataAuspices.addAll(data);
-      });
-    });
     super.initState();
   }
 
@@ -53,19 +48,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
     return resp;
   }
 
-  Future<List<Auspice>> fetchAuspices() async {
-    var resp = await auspiceProvider
-        .getAuspicesFromThisTournament(int.parse(widget.tournament.id));
-    if (resp.isEmpty) {
-      setState(() {
-        hasDataAuspices = false;
-      });
-    }
-    return resp;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final auspicesBloc = AuspicesProvider.of(context);
+    auspicesBloc.getAuspices(int.parse(widget.tournament.id));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -78,41 +65,43 @@ class _CategoriesPageState extends State<CategoriesPage> {
         iconTheme: IconThemeData(color: Color.fromRGBO(112, 112, 112, 1.0)),
       ),
       backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
-      body: showData(),
+      body: showData(auspicesBloc),
     );
   }
 
-  Widget showData() {
+  Widget showData(AuspicesBloc auspicesBloc) {
     if (hasDataCategories && dataCategories.isEmpty)
       return Center(child: CircularProgressIndicator());
     if (dataCategories.length == 0) {
       return Center(child: Text("No hay categorías por ahora"));
     } else {
-      return Builder(
-        builder: (cntxt) => Column(
-          children: [
-            Expanded(child: showCategories(context)),
-            showCarousel(),
-          ],
-        ),
+      return Column(
+        children: [
+          Expanded(child: showCategories(context, auspicesBloc)),
+          showCarousel(auspicesBloc),
+        ],
       );
     }
   }
 
-  Widget showCarousel() {
+  Widget showCarousel(AuspicesBloc auspicesBloc) {
     return hasDataAuspices == true
-        ? CarouselAuspices(idTournament: widget.tournament.id)
+        ? StreamBuilder(
+            stream: auspicesBloc.auspicesStream,
+            builder: (context, snapshot) {
+              return CarouselAuspices();
+            })
         : Container();
   }
 
-  Widget showCategories(BuildContext context) {
+  Widget showCategories(BuildContext context,AuspicesBloc auspicesBloc ) {
     return Column(
       children: [
         FlatButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    ManageAuspicesPage(idTournament: widget.tournament.id)));
+                    ManageAuspicesPage(auspices: auspicesBloc.auspices, idTournament: widget.tournament.id,)));
           },
           child: const Text('Administrar auspicios',
               style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),

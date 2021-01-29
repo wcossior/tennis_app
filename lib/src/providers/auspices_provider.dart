@@ -1,13 +1,36 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:tennis_app/src/blocs/auspices_bloc.dart';
+export 'package:tennis_app/src/blocs/auspices_bloc.dart';
 import 'package:tennis_app/src/models/auspices_model.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 
-class _AuspicesProvider {
-  List<Auspice> auspices = [];
+class AuspicesProvider extends InheritedWidget {
+  static AuspicesProvider _instancia;
   final databaseReference = Firestore.instance;
-  String uploadedFileURL;
+
+  factory AuspicesProvider({Key key, Widget child}) {
+    if (_instancia == null) {
+      _instancia = AuspicesProvider._internal(key: key, child: child);
+    }
+    return _instancia;
+  }
+
+  AuspicesProvider._internal({Key key, Widget child})
+      : super(key: key, child: child);
+
+  final auspicesBloc = new AuspicesBloc();
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => true;
+
+  static AuspicesBloc of(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<AuspicesProvider>())
+        .auspicesBloc;
+  }
 
   List<Auspice> _processResp(List<DocumentSnapshot> data) {
     final auspices = new Auspices.fromJsonList(data);
@@ -33,6 +56,7 @@ class _AuspicesProvider {
 
   Future<Map> addAuspiceForTournament(Auspice ausp, File img) async {
     try {
+      String uploadedFileURL;
       StorageReference storageReference = FirebaseStorage.instance
           .ref()
           .child('auspicios/${Path.basename(img.path)}');
@@ -46,6 +70,7 @@ class _AuspicesProvider {
         'url_img': uploadedFileURL,
         'id_torneo': ausp.idTorneo
       });
+
       Map resp = {
         "message": "Auspicio agregado",
         "url": uploadedFileURL,
@@ -61,7 +86,6 @@ class _AuspicesProvider {
 
   Future<String> deleteAuspiceFromATournament(String id, String url) async {
     try {
-      print("En provider " + id);
       FirebaseStorage.instance.getReferenceFromUrl(url).then((res) {
         res.delete().then((res) {
           print("borrado!");
@@ -76,5 +100,3 @@ class _AuspicesProvider {
     }
   }
 }
-
-final auspiceProvider = new _AuspicesProvider();
