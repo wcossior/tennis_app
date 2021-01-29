@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:tennis_app/src/pages/mainTabs/notifications_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/tournaments_page.dart';
+import 'package:tennis_app/src/providers/login_provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -23,6 +24,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final loginBloc = LoginProvider.of(context);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -37,13 +40,20 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
           bottom: _tabBar(),
+          actions: [
+            Flexible(
+              child: RichText(
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                    style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
+                    text: loginBloc.email),
+              ),
+            ),
+          ],
         ),
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
-          children: [
-            TournamentsPage(),
-            NotificationsPage()
-          ],
+          children: [TournamentsPage(), NotificationsPage()],
         ),
       ),
     );
@@ -61,10 +71,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Tab> _getTabs() {
-    return [
-      drawTabAllTournmaments(),
-      drawTabNotifications()
-    ];
+    return [drawTabAllTournmaments(), drawTabNotifications()];
   }
 
   Widget drawTabAllTournmaments() {
@@ -81,7 +88,6 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  
   Widget drawTabNotifications() {
     return Tab(
         child: Align(

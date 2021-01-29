@@ -17,7 +17,7 @@ class _CarouselAuspicesState extends State<CarouselAuspices> {
     final auspicesBloc = AuspicesProvider.of(context);
     final auspices = auspicesBloc.auspices;
 
-    if (auspices.isEmpty) return Container();
+    if (auspices==null) return Container();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,

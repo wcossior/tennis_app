@@ -140,12 +140,14 @@ class _GamesPageState extends State<GamesPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                      child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                              style: TextStyle(
-                                  color: Color.fromRGBO(112, 112, 112, 1.0)),
-                              text: dataGamesForDisplay[index].jug1))),
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                          style: TextStyle(
+                              color: Color.fromRGBO(112, 112, 112, 1.0)),
+                          text: dataGamesForDisplay[index].jug1),
+                    ),
+                  ),
                   Text(dataGamesForDisplay[index].scoreJugador1.toString()),
                 ],
               ),
@@ -154,12 +156,14 @@ class _GamesPageState extends State<GamesPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                      child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
-                              style: TextStyle(
-                                  color: Color.fromRGBO(112, 112, 112, 1.0)),
-                              text: dataGamesForDisplay[index].jug2))),
+                    child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                          style: TextStyle(
+                              color: Color.fromRGBO(112, 112, 112, 1.0)),
+                          text: dataGamesForDisplay[index].jug2),
+                    ),
+                  ),
                   Text(dataGamesForDisplay[index].scoreJugador2.toString()),
                 ],
               ),
