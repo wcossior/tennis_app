@@ -9,7 +9,7 @@ class LoginBloc with Validators {
   final _passwordController = BehaviorSubject<String>();
 
   // Recuperar los datos del Stream
-  Stream<String> get emailStream    => _emailController.stream.transform( validarEmail );
+  Stream<String> get emailStream    => _emailController.stream;
   Stream<String> get passwordStream => _passwordController.stream.transform( validarPassword );
 
   Stream<bool> get formValidStream => 

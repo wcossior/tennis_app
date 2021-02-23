@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:tennis_app/src/pages/mainTabs/notifications_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/tournaments_page.dart';
-import 'package:tennis_app/src/providers/login_provider.dart';
+import 'package:tennis_app/src/preferences/preferences_user.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final loginBloc = LoginProvider.of(context);
+    final prefs = new PreferenciasUsuario();
 
     return DefaultTabController(
       length: 2,
@@ -41,14 +42,20 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Color.fromRGBO(249, 249, 249, 1.0),
           bottom: _tabBar(),
           actions: [
-            Flexible(
-              child: RichText(
-                overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                    style: TextStyle(color: Color.fromRGBO(112, 112, 112, 1.0)),
-                    text: loginBloc.email),
-              ),
+            FlatButton(
+              child: Text(
+                  (prefs.token["nombre"] == null ? "" : prefs.token["nombre"]).substring(0,11),
+                  style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+              onPressed: null,
             ),
+            FlatButton(
+              child: Text("Cerrar Sesión",
+                  style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
+              onPressed: () {
+                prefs.delete();
+                Navigator.pushReplacementNamed(context, 'login');
+              },
+            )
           ],
         ),
         body: TabBarView(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tennis_app/src/blocs/provider.dart';
 import 'package:tennis_app/src/providers/img_provider.dart';
 
 class FormAuspice extends StatefulWidget {
@@ -15,7 +16,7 @@ class _FormAuspiceState extends State<FormAuspice> {
 
   @override
   Widget build(BuildContext context) {
-    final imgBloc = ImgProvider.of(context);
+    final imgBloc = Provider.imgOf(context);
     return StreamBuilder(
         stream: imgBloc.imgStream,
         builder: (context, snapshot) {

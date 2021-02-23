@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tennis_app/src/blocs/provider.dart';
 import 'package:tennis_app/src/models/auspices_model.dart';
 import 'package:tennis_app/src/models/category_model.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
@@ -50,7 +51,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final auspicesBloc = AuspicesProvider.of(context);
+    final auspicesBloc = Provider.aupicesOf(context);
     auspicesBloc.getAuspices(int.parse(widget.tournament.id));
 
     return Scaffold(

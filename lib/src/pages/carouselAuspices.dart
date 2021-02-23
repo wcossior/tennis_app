@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:tennis_app/src/providers/auspices_provider.dart';
+import 'package:tennis_app/src/blocs/provider.dart';
 
 class CarouselAuspices extends StatefulWidget {
   CarouselAuspices({Key key}) : super(key: key);
@@ -14,7 +14,7 @@ class _CarouselAuspicesState extends State<CarouselAuspices> {
 
   @override
   Widget build(BuildContext context) {
-    final auspicesBloc = AuspicesProvider.of(context);
+    final auspicesBloc = Provider.aupicesOf(context);
     final auspices = auspicesBloc.auspices;
 
     if (auspices==null) return Container();

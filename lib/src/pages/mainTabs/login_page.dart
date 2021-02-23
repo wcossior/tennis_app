@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tennis_app/src/blocs/login_bloc.dart';
+import 'package:tennis_app/src/blocs/provider.dart';
 import 'package:tennis_app/src/providers/login_provider.dart';
+import 'package:tennis_app/src/providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -20,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     color: Colors.white,
     height: 90.0,
   );
+  bool noInfoYet = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginForm(BuildContext context) {
-    final bloc = LoginProvider.of(context);
+    final bloc = Provider.loginOf(context);
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -70,7 +73,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-          Text('¿Olvido la contraseña?'),
           SizedBox(height: 100.0)
         ],
       ),
@@ -88,8 +90,8 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
               icon: Icon(Icons.alternate_email, color: colorVerde),
               hintText: 'ejemplo@correo.com',
-              labelText: 'Correo electrónico',
-              counterText: snapshot.data,
+              labelText: 'Correo electrónico o nombre',
+              // counterText: snapshot.data,
               errorText: snapshot.error,
             ),
             onChanged: bloc.changeEmail,
@@ -110,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
                 icon: Icon(Icons.lock_outline, color: colorVerde),
                 labelText: 'Contraseña',
-                counterText: snapshot.data,
+                // counterText: snapshot.data,
                 errorText: snapshot.error),
             onChanged: bloc.changePassword,
           ),
@@ -124,27 +126,61 @@ class _LoginPageState extends State<LoginPage> {
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return RaisedButton(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-              child: Text('Ingresar'),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0)),
-            elevation: 0.0,
-            color: colorVerde,
-            textColor: Colors.white,
-            onPressed: snapshot.hasData ? () => _login(bloc, context) : null);
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
+            child: Text('Ingresar'),
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          elevation: 0.0,
+          color: colorVerde,
+          textColor: Colors.white,
+          onPressed: snapshot.hasData
+              ? (!noInfoYet ? () => _login(bloc, context) : null)
+              : null,
+        );
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) {
-    print('================');
-    print('Email: ${bloc.email}');
-    print('Password: ${bloc.password}');
-    print('================');
+  _login(LoginBloc bloc, BuildContext context) async {
+    setState(() {
+      noInfoYet = true;
+    });
+    Map info = await userProvider.login(bloc.email, bloc.password);
 
-    Navigator.pushReplacementNamed(context, '/');
+    if (info.containsKey("msg")) {
+      showAlert(context, info["msg"]);
+    } else {
+      setState(() {
+        noInfoYet = false;
+      });
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  }
+
+  showAlert(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Informacion incorrecta"),
+          content: Text(msg),
+          actions: [
+            FlatButton(
+              child: Text("Ok"),
+              onPressed: () {
+                setState(() {
+                  noInfoYet = false;
+                });
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   Widget _crearFondo(BuildContext context) {
