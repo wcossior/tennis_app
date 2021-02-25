@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tennis_app/src/blocs/provider.dart';
-import 'package:tennis_app/src/providers/img_provider.dart';
 
 class FormAuspice extends StatefulWidget {
   FormAuspice({Key key}) : super(key: key);

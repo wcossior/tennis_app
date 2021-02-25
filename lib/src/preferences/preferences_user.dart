@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tennis_app/src/blocs/provider.dart';
 
 class PreferenciasUsuario {
   static final PreferenciasUsuario _instancia =
@@ -34,20 +36,15 @@ class PreferenciasUsuario {
     _prefs.setString('token', value);
   }
 
-  delete() {
+  logout(BuildContext context) {
     _prefs.remove("token");
+    final bloc = Provider.loginOf(context);
+    bloc.changeUser("");
+    bloc.changePassword("");
   }
 
-  isLogged(){
+  isLogged() {
     return _prefs.containsKey("token");
   }
 
-  // GET y SET de la última página
-  get ultimaPagina {
-    return _prefs.getString('ultimaPagina') ?? 'login';
-  }
-
-  set ultimaPagina(String value) {
-    _prefs.setString('ultimaPagina', value);
-  }
 }

@@ -6,6 +6,7 @@ import 'package:tennis_app/src/pages/mainTabs/home_page.dart';
 import 'package:tennis_app/src/pages/details_group_page.dart';
 import 'package:tennis_app/src/pages/details_playoff_page.dart';
 import 'package:tennis_app/src/pages/mainTabs/login_page.dart';
+import 'package:tennis_app/src/pages/mainTabs/register_page.dart';
 import 'package:tennis_app/src/pages/manageAuspices_page.dart';
 import 'package:tennis_app/src/pages/scheduling_page.dart';
 import 'package:tennis_app/src/preferences/preferences_user.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           routes: {
             "/": (BuildContext context) => HomePage(),
             "login": (BuildContext context) => LoginPage(),
+            "register": (BuildContext context) => RegisterPage(),
             "details_group": (BuildContext context) => DetailsGroupPage(),
             "details_playoff": (BuildContext context) => DetailsPlayoffPage(),
             "categories": (BuildContext context) => CategoriesPage(),

@@ -44,7 +44,9 @@ class _HomePageState extends State<HomePage> {
           actions: [
             FlatButton(
               child: Text(
-                  (prefs.token["nombre"] == null ? "" : prefs.token["nombre"]).substring(0,11),
+                  prefs.token["nombre"].length < 12
+                      ? prefs.token["nombre"]
+                      : prefs.token["nombre"].substring(0, 11)+"...",
                   style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
               onPressed: null,
             ),
@@ -52,7 +54,7 @@ class _HomePageState extends State<HomePage> {
               child: Text("Cerrar Sesión",
                   style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
               onPressed: () {
-                prefs.delete();
+                prefs.logout(context);
                 Navigator.pushReplacementNamed(context, 'login');
               },
             )

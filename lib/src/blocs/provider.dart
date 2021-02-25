@@ -10,6 +10,7 @@ import 'package:tennis_app/src/blocs/login_bloc.dart';
 export 'package:tennis_app/src/blocs/login_bloc.dart';
 
 import 'package:tennis_app/src/blocs/img_bloc.dart';
+import 'package:tennis_app/src/blocs/register_bloc.dart';
 export 'package:tennis_app/src/blocs/img_bloc.dart';
 
 import 'package:tennis_app/src/models/auspices_model.dart';
@@ -20,6 +21,7 @@ class Provider extends InheritedWidget {
   final auspicesBloc = new AuspicesBloc();
   final imgBloc = ImgBloc();
   final loginBloc = LoginBloc();
+  final registerBloc = RegisterBloc();
   final databaseReference = Firestore.instance;
   static Provider _instancia;
 
@@ -46,6 +48,10 @@ class Provider extends InheritedWidget {
   static LoginBloc loginOf(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<Provider>())
         .loginBloc;
+  }
+  static RegisterBloc registerOf(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<Provider>())
+        .registerBloc;
   }
 
   List<Auspice> _processResp(List<DocumentSnapshot> data) {

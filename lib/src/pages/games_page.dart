@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tennis_app/src/preferences/preferences_user.dart';
 import 'package:tennis_app/src/providers/games_group_provider.dart';
 import 'package:tennis_app/src/providers/games_playoff_provider.dart';
 import 'package:tennis_app/src/providers/games_provider.dart';
@@ -26,6 +27,8 @@ class _GamesPageState extends State<GamesPage>
     height: 60.0,
   );
   final _formKey = GlobalKey<FormState>();
+  final prefs = new PreferenciasUsuario();
+
 
   @override
   bool get wantKeepAlive => true;
@@ -171,6 +174,7 @@ class _GamesPageState extends State<GamesPage>
           ),
         ),
         ButtonBar(children: [
+          prefs.token["role"]=="Arbitro"?
           FlatButton(
             child: const Text('Cambiar Score',
                 style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
@@ -180,7 +184,7 @@ class _GamesPageState extends State<GamesPage>
                   context: context,
                   child: await showModalForChangeScore(index));
             },
-          ),
+          ):Container(),
           FlatButton(
             child: const Text('Ver detalles',
                 style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),

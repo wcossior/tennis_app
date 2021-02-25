@@ -6,7 +6,7 @@ import 'package:tennis_app/src/models/category_model.dart';
 import 'package:tennis_app/src/models/tournament_model.dart';
 import 'package:tennis_app/src/pages/carouselAuspices.dart';
 import 'package:tennis_app/src/pages/manageAuspices_page.dart';
-import 'package:tennis_app/src/providers/auspices_provider.dart';
+import 'package:tennis_app/src/preferences/preferences_user.dart';
 import 'package:tennis_app/src/providers/category_provider.dart';
 
 class CategoriesPage extends StatefulWidget {
@@ -24,6 +24,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   );
   List<Auspice> dataAuspices = new List<Auspice>();
   List<Category> dataCategories = new List<Category>();
+  final prefs = new PreferenciasUsuario();
   var hasDataCategories = true;
   var hasDataAuspices = true;
 
@@ -51,6 +52,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     final auspicesBloc = Provider.aupicesOf(context);
     auspicesBloc.getAuspices(int.parse(widget.tournament.id));
 
@@ -98,6 +100,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Widget showCategories(BuildContext context,AuspicesBloc auspicesBloc ) {
     return Column(
       children: [
+        prefs.token["role"]=="Administrador"?
         FlatButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -106,7 +109,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
           },
           child: const Text('Administrar auspicios',
               style: TextStyle(color: Color.fromRGBO(174, 185, 127, 1.0))),
-        ),
+        ): Container(),
         Expanded(
           child: ListView(
             padding: EdgeInsets.all(10.0),

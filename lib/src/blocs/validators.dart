@@ -33,6 +33,45 @@ class Validators {
 
     }
   );
+  final validarUser = StreamTransformer<String, String>.fromHandlers(
+    handleData: ( user, sink ) {
+
+      if ( user.length >0 ) {
+        sink.add( user );
+      } else {
+        sink.addError('Nombre o correo inválidos');
+      }
+
+    }
+  );
+  final validarNombre = StreamTransformer<String, String>.fromHandlers(
+    handleData: ( nombre, sink ) {
+
+       Pattern pattern = r'[a-zA-Z]';
+      RegExp regExp   = new RegExp(pattern);
+
+      if ( nombre.length >= 3 && regExp.hasMatch(nombre)) {
+        sink.add( nombre );
+      } else {
+        sink.addError('Ingrese un nombre correcto');
+      }
+
+    }
+  );
+  final validarCi = StreamTransformer<String, String>.fromHandlers(
+    handleData: ( ci, sink ) {
+
+      Pattern pattern = r'^[0-9]*$';
+      RegExp regExp   = new RegExp(pattern);
+
+      if ( ci.length >= 5 && regExp.hasMatch(ci)) {
+        sink.add( ci );
+      } else {
+        sink.addError('Ingrese un ci valido');
+      }
+
+    }
+  );
 
 
 }

@@ -20,6 +20,18 @@ class _UserProvider {
 
     return decodeData;
   }
+
+  Future newUser(String ci, String email, String nombre, String password) async {
+    final authData = {"ci": ci, "email": email, "nombre": nombre, "password": password};
+    final url = Uri.https(_url, "/newUser");
+
+    final resp = await http.post(url, body: authData);
+
+    Map decodeData = json.decode(resp.body);
+    
+
+    return decodeData;
+  }
 }
 
 final userProvider = new _UserProvider();

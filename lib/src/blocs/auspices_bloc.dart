@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
+import 'package:tennis_app/src/blocs/provider.dart';
 import 'package:tennis_app/src/models/auspices_model.dart';
-import 'package:tennis_app/src/providers/auspices_provider.dart';
 import 'dart:io';
 
 class AuspicesBloc {
@@ -17,18 +17,18 @@ class AuspicesBloc {
   }
 
   getAuspices(int id) async {
-    auspicesSink(await AuspicesProvider().getAuspicesFromThisTournament(id));
+    auspicesSink(await Provider().getAuspicesFromThisTournament(id));
   }
 
   addAuspice(Auspice a, File img, int id) async {
-    Map resp = await AuspicesProvider().addAuspiceForTournament(a, img);
+    Map resp = await Provider().addAuspiceForTournament(a, img);
     getAuspices(id);
     return resp;
   }
 
   deleteAuspice(String id, String url, int idTorneo) async {
     var resp =
-        await AuspicesProvider().deleteAuspiceFromATournament(id, url);
+        await Provider().deleteAuspiceFromATournament(id, url);
     getAuspices(idTorneo);
     return resp;
   }

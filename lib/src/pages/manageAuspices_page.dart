@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tennis_app/src/blocs/provider.dart';
 import 'package:tennis_app/src/models/auspices_model.dart';
-import 'package:tennis_app/src/providers/auspices_provider.dart';
-import 'package:tennis_app/src/providers/img_provider.dart';
 import 'formAuspice.dart';
 
 class ManageAuspicesPage extends StatefulWidget {

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tennis_app/src/blocs/login_bloc.dart';
 import 'package:tennis_app/src/blocs/provider.dart';
+import 'package:tennis_app/src/blocs/register_bloc.dart';
 import 'package:tennis_app/src/providers/user_provider.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   Color colorVerde = Color.fromRGBO(174, 185, 127, 1.0);
   Color colorAmarillo = Color.fromRGBO(222, 185, 100, 1.0);
 
@@ -29,13 +29,13 @@ class _LoginPageState extends State<LoginPage> {
         body: Stack(
       children: <Widget>[
         _crearFondo(context),
-        _loginForm(context),
+        _registerForm(context),
       ],
     ));
   }
 
-  Widget _loginForm(BuildContext context) {
-    final bloc = Provider.loginOf(context);
+  Widget _registerForm(BuildContext context) {
+    final bloc = Provider.registerOf(context);
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -62,20 +62,23 @@ class _LoginPageState extends State<LoginPage> {
                 ]),
             child: Column(
               children: <Widget>[
-                Text('Iniciar Sesión', style: TextStyle(fontSize: 20.0)),
-                SizedBox(height: 60.0),
+                Text('Crear una cuenta', style: TextStyle(fontSize: 20.0)),
+                SizedBox(height: 30.0),
+                _crearCi(bloc),
+                SizedBox(height: 15.0),
                 _crearEmail(bloc),
-                SizedBox(height: 30.0),
+                SizedBox(height: 15.0),
+                _crearNombre(bloc),
+                SizedBox(height: 15.0),
                 _crearPassword(bloc),
-                SizedBox(height: 30.0),
+                SizedBox(height: 15.0),
                 _crearBoton(bloc)
               ],
             ),
           ),
           FlatButton(
-            child: Text("Crear una nueva cuenta"),
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, "register"),
+            child: Text("¿Ya tienes cuenta? Login"),
+            onPressed: () => Navigator.pushReplacementNamed(context, "login"),
           ),
           SizedBox(height: 100.0)
         ],
@@ -83,29 +86,73 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _crearEmail(LoginBloc bloc) {
+  Widget _crearCi(RegisterBloc bloc) {
     return StreamBuilder(
-      stream: bloc.userStream,
+      stream: bloc.ciStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              icon: Icon(Icons.person_outline, color: colorVerde),
-              hintText: 'ejemplo@correo.com',
-              labelText: 'Correo electrónico o nombre',
+              icon: Icon(Icons.format_list_numbered_rounded, color: colorVerde),
+              hintText: 'Ingrese su ci',
+              labelText: 'Ci',
               // counterText: snapshot.data,
               errorText: snapshot.error,
             ),
-            onChanged: bloc.changeUser,
+            onChanged: bloc.changeCi,
           ),
         );
       },
     );
   }
 
-  Widget _crearPassword(LoginBloc bloc) {
+  Widget _crearEmail(RegisterBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.emailStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              icon: Icon(Icons.alternate_email, color: colorVerde),
+              hintText: 'Ingrese su correo',
+              labelText: 'Correo electrónico',
+              // counterText: snapshot.data,
+              errorText: snapshot.error,
+            ),
+            onChanged: bloc.changeEmail,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _crearNombre(RegisterBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.nombreStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: TextField(
+            keyboardType: TextInputType.name,
+            decoration: InputDecoration(
+              icon: Icon(Icons.person_outline, color: colorVerde),
+              hintText: 'Ingrese su nombre',
+              labelText: 'Nombre',
+              // counterText: snapshot.data,
+              errorText: snapshot.error,
+            ),
+            onChanged: bloc.changeNombre,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _crearPassword(RegisterBloc bloc) {
     return StreamBuilder(
       stream: bloc.passwordStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -125,14 +172,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _crearBoton(LoginBloc bloc) {
+  Widget _crearBoton(RegisterBloc bloc) {
     return StreamBuilder(
-      stream: bloc.formValidStream,
+      stream: bloc.formNewUserValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return RaisedButton(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-            child: Text('Ingresar'),
+            child: Text('Registrarse'),
           ),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
@@ -140,36 +187,39 @@ class _LoginPageState extends State<LoginPage> {
           color: colorVerde,
           textColor: Colors.white,
           onPressed: snapshot.hasData
-              ? (!noInfoYet ? () => _login(bloc, context) : null)
+              ? (!noInfoYet ? () => _register(bloc, context) : null)
               : null,
         );
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
+  _register(RegisterBloc bloc, BuildContext context) async {
     setState(() {
       noInfoYet = true;
     });
-    Map info = await userProvider.login(bloc.user, bloc.password);
+    Map info = await userProvider.newUser(
+      bloc.ci,
+      bloc.email,
+      bloc.nombre,
+      bloc.password,
+    );
 
     if (info.containsKey("msg")) {
-      showAlert(context, info["msg"]);
-    } else {
       setState(() {
         noInfoYet = false;
       });
-      Navigator.pushReplacementNamed(context, '/');
+      showAlert(context, info["msg"], bloc);
     }
   }
 
-  showAlert(BuildContext context, String msg) {
+  showAlert(BuildContext context, String msg, RegisterBloc bloc) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text("Informacion incorrecta"),
+          title: Text("Informacion"),
           content: Text(msg),
           actions: [
             FlatButton(
@@ -179,6 +229,10 @@ class _LoginPageState extends State<LoginPage> {
                   noInfoYet = false;
                 });
                 Navigator.of(context).pop();
+                if (msg == "Cuenta creada exitosamente!") {
+                  clearData(bloc);
+                  Navigator.pushReplacementNamed(context, "login");
+                }
               },
             )
           ],
@@ -225,5 +279,12 @@ class _LoginPageState extends State<LoginPage> {
         )
       ],
     );
+  }
+
+  void clearData(RegisterBloc bloc) {
+    bloc.changeCi("");
+    bloc.changeEmail("");
+    bloc.changeNombre("");
+    bloc.changePassword("");
   }
 }
